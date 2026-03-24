@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  :root {
+    --on-tertiary-fixed-variant: #474746;
+    --tertiary-fixed-dim: #c8c6c5;
+    --outline-variant: #c3c6d6;
+    --inverse-primary: #b2c5ff;
+    --tertiary-container: #5c5b5b;
+    --tertiary-fixed: #e4e2e1;
+    --outline: #737685;
+    --surface: #fcf9f8;
+    --on-primary-fixed-variant: #0040a2;
+    --surface-container-high: #eae7e7;
+    --surface-bright: #fcf9f8;
+    --surface-dim: #dcd9d9;
+    --surface-variant: #e4e2e1;
+    --on-secondary: #ffffff;
+    --error-container: #ffdad6;
+    --inverse-surface: #303030;
+    --tertiary: #444343;
+    --secondary: #51606d;
+    --primary: #003d9b;
+    --secondary-container: #d2e2f0;
+    --on-secondary-fixed: #0e1d28;
+    --primary-container: #0052cc;
+    --on-secondary-container: #556471;
+    --background: #fcf9f8;
+    --error: #ba1a1a;
+    --on-tertiary: #ffffff;
+    --on-surface-variant: #434654;
+    --on-primary-container: #c4d2ff;
+    --on-background: #1b1c1c;
+    --secondary-fixed: #d5e4f3;
+    --surface-container-low: #f6f3f2;
+    --on-tertiary-fixed: #1b1c1c;
+    --on-error-container: #93000a;
+    --inverse-on-surface: #f3f0ef;
+    --on-primary: #ffffff;
+    --on-secondary-fixed-variant: #3a4954;
+    --surface-tint: #0c56d0;
+    --on-primary-fixed: #001848;
+    --surface-container-lowest: #ffffff;
+    --secondary-fixed-dim: #b9c8d7;
+    --on-tertiary-container: #d5d3d2;
+    --on-error: #ffffff;
+    --surface-container: #f0eded;
+    --on-surface: #1b1c1c;
+    --primary-fixed-dim: #b2c5ff;
+  }
+
+  /* Dark mode mappings would go here */
+
+  * {
+    @apply border-outline-variant;
+  }
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.no-scrollbar::-webkit-scrollbar { 
+  display: none; 
+}
+.no-scrollbar { 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+/* Custom Scrollbar for Kanban Main Axis */
+.kanban-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.kanban-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.kanban-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 61, 155, 0.1);
+  border-radius: 10px;
+}
+.dark .kanban-scroll::-webkit-scrollbar-thumb {
+  background: rgba(178, 197, 255, 0.2);
+}
+
+/* Custom Scrollbar for Kanban Column Axis */
+.kanban-column-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.kanban-column-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.kanban-column-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 61, 155, 0.1);
+  border-radius: 10px;
+}
+.dark .kanban-column-scroll::-webkit-scrollbar-thumb {
+  background: rgba(178, 197, 255, 0.2);
+}

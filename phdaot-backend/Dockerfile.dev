@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package.json package-lock.json* yarn.lock* ./
+
+# Install dependencies
+RUN npm install
+
+# We don't copy all source files since we rely on volume mounts for hot reloading
+# But copying them ensures it works if volume mounting is not used
+COPY . .
+
+EXPOSE 3001
+
+CMD ["npm", "run", "start:dev"]

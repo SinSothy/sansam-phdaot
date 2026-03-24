@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: phdaot-postgres-prod
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-SuperSecretPassword123!}
+      POSTGRES_DB: ${DB_NAME:-phdaot}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    restart: always
+
+  minio:
+    image: minio/minio:latest
+    container_name: phdaot-minio-prod
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-SuperSecretPassword123!}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_prod:/data
+    restart: always
+
+  backend:
+    build:
+      context: ./phdaot-backend
+      dockerfile: Dockerfile.prod
+    container_name: phdaot-backend-prod
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-SuperSecretPassword123!}
+      - DB_NAME=${DB_NAME:-phdaot}
+      - NODE_ENV=production
+    depends_on:
+      - db
+      - minio
+    restart: always
+
+  frontend:
+    build:
+      context: ./Phdaot
+      dockerfile: Dockerfile.prod
+    container_name: phdaot-frontend-prod
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  postgres_data_prod:
+  minio_data_prod:
+
+networks:
+  default:
+    name: phdaot_prod_network
+    driver: bridge
