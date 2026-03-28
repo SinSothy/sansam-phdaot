@@ -9,6 +9,12 @@ export class Workspace {
   name: string;
 
   @Column({ nullable: true })
+  description: string;
+
+  @Column({ unique: true })
+  slug: string;
+
+  @Column({ nullable: true })
   logo_url: string;
   
   @CreateDateColumn()

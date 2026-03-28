@@ -42,9 +42,18 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-password}
       - DB_NAME=${DB_NAME:-phdaot}
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./phdaot-backend:/app
       - /app/node_modules
+    develop:
+      watch:
+        - path: ./phdaot-backend/package.json
+          action: rebuild
+        - path: ./phdaot-backend/src
+          action: sync
+          target: /app/src
     depends_on:
       - db
       - minio
@@ -59,12 +68,20 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true
       # Expose backend URL to frontend if needed
       - NEXT_PUBLIC_API_URL=http://localhost:3001/api
     volumes:
       - ./Phdaot:/app
       # Prevent overwriting node_modules
       - /app/node_modules
+    develop:
+      watch:
+        - path: ./Phdaot/package.json
+          action: rebuild
+        - path: ./Phdaot/src
+          action: sync
+          target: /app/src
     depends_on:
       - backend
     restart: unless-stopped

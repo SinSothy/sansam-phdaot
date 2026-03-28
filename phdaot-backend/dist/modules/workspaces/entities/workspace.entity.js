@@ -25,6 +25,14 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
+], Workspace.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ unique: true }),
+    __metadata("design:type", String)
+], Workspace.prototype, "slug", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
 ], Workspace.prototype, "logo_url", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
