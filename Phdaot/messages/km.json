@@ -1,0 +1,248 @@
+{
+  "Common": {
+    "loading": "កំពុងផ្ទុក...",
+    "error": "កំហុស",
+    "success": "ជោគជ័យ",
+    "cancel": "បោះបង់",
+    "confirm": "បញ្ជាក់",
+    "save": "រក្សាទុក",
+    "delete": "លុប",
+    "edit": "កែសម្រួល",
+    "add": "បន្ថែម",
+    "remove": "ដកចេញ",
+    "leave": "ចាកចេញ",
+    "boards": "ក្តារការងារ"
+  },
+  "Errors": {
+    "unexpected": "មានកំហុសដែលមិនបានរំពឹងទុកបានកើតឡើង។ សូមព្យាយាមម្តងទៀត។",
+    "sessionExpired": "វគ្គរបស់អ្នកបានផុតកំណត់ហើយ។ សូមចូលម្តងទៀត។",
+    "noPermission": "អ្នកមិនមានការអនុញ្ញាតឱ្យអនុវត្តសកម្មភាពនេះទេ។",
+    "notFound": "រកមិនឃើញធនធានដែលបានស្នើសុំទេ។",
+    "network": "កំហុសបណ្តាញ។ សូមពិនិត្យមើលការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។",
+    "errorCode": "កូដកំហុស: {code}"
+  },
+  "Nav": {
+    "boards": "ក្តារការងារ",
+    "dailyActivity": "សកម្មភាពប្រចាំថ្ងៃ",
+    "noted": "កំណត់ចំណាំ",
+    "analytics": "ការវិភាគ",
+    "members": "សមាជិក",
+    "collapse": "បង្រួម",
+    "expand": "ពង្រីក"
+  },
+  "Header": {
+    "searchPlaceholder": "ស្វែងរកការវិភាគ ភារកិច្ច ឬសមាជិក...",
+    "notifications": "ការជូនដំណឹង",
+    "markAllRead": "សម្គាល់ថាបានអានទាំងអស់",
+    "viewAllNotifications": "មើលការជូនដំណឹងទាំងអស់",
+    "help": "ជំនួយ",
+    "documentation": "ឯកសារជំនួយ",
+    "contactSupport": "ទាក់ទងផ្នែកគាំទ្រ",
+    "keyboardShortcuts": "ផ្លូវកាត់ក្តារចុច",
+    "whatsNew": "អ្វីដែលថ្មី",
+    "settings": "ការកំណត់",
+    "preferences": "ចំណូលចិត្ត",
+    "theme": "រចនាប័ទ្ម",
+    "privacy": "ឯកជនភាព",
+    "profile": "ប្រវត្តិរូប",
+    "manageProfile": "គ្រប់គ្រងប្រវត្តិរូប",
+    "workspaces": "កន្លែងធ្វើការ",
+    "logout": "ចាកចេញ"
+  },
+  "Dashboard": {
+    "kanbanClarity": "Kanban Clarity",
+    "designSystemTeam": "ក្រុមរចនាប្រព័ន្ធ (Design System Team)",
+    "mobileAppDev": "ការអភិវឌ្ឍន៍កម្មវិធីទូរស័ព្ទ (Mobile App Development)",
+    "boards": "ក្តារការងារ",
+    "filter": "តម្រង",
+    "view": "មើល",
+    "recentlyViewed": "បានមើលថ្មីៗ",
+    "createNewBoard": "បង្កើតក្តារការងារថ្មី",
+    "yourWorkspaces": "កន្លែងធ្វើការរបស់អ្នក",
+    "membersCount": "សមាជិក ({count})",
+    "settings": "ការកំណត់",
+    "active": "សកម្ម",
+    "updating": "កំពុងធ្វើបច្ចុប្បន្នភាព",
+    "archived": "បានរក្សាទុកក្នុងបណ្ណសារ",
+    "newBoardInWorkspace": "ក្តារការងារថ្មីក្នុង {workspace}",
+    "boardTitles": {
+      "marketing": "យុទ្ធនាការទីផ្សារត្រីមាសទី៤",
+      "research": "ឃ្លាំងស្រាវជ្រាវ UX",
+      "roadmap": "ផែនការផលិតផល ២០២៤",
+      "componentLibrary": "បណ្ណាល័យសមាសភាគ",
+      "docHub": "មជ្ឈមណ្ឌលឯកសារ",
+      "brandAssets": "ទ្រព្យសម្បត្តិម៉ាកយីហោ",
+      "archive2023": "បណ្ណសារ ២០២៣",
+      "appLaunch": "មេចំរាញ់ការបើកដំណើរការកម្មវិធី",
+      "iosSprint": "iOS Sprint 12",
+      "androidSprint": "Android Sprint 12"
+    },
+    "appLaunchDesc": "មជ្ឈមណ្ឌលកណ្តាលសម្រាប់រាល់លទ្ធផលនៃការបើកដំណើរការ និងការធ្វើសមកាលកម្មអន្តរមុខងារ។"
+  },
+  "Analytics": {
+    "pageTitle": "ទិដ្ឋភាពទូទៅនៃការវិភាគ",
+    "pageSubtitle": "តាមដានដំណើរការ និងល្បឿននៃស្ថាប័នរបស់អ្នក។",
+    "projectAnalytics": "ការវិភាគគម្រោង",
+    "realTimeMetrics": "រង្វាស់លទ្ធផលពេលវេលាជាក់ស្តែងសម្រាប់ {name}",
+    "workspace": "កន្លែងធ្វើការ",
+    "project": "គម្រោង",
+    "last30days": "៣០ ថ្ងៃមុន",
+    "quarterly": "ប្រចាំត្រីមាស",
+    "customRange": "ចន្លោះពេលកំណត់ដោយខ្លួនឯង",
+    "startDate": "ថ្ងៃចាប់ផ្តើម",
+    "endDate": "ថ្ងៃបញ្ចប់",
+    "applyRange": "អនុវត្ត",
+    "totalProjects": "គម្រោងសរុប",
+    "completedProjects": "គម្រោងដែលបានបញ្ចប់",
+    "inProgressTasks": "ភារកិច្ចកំពុងអនុវត្ត",
+    "toDoTasks": "ភារកិច្ចត្រូវធ្វើ",
+    "activeThisSprint": "សកម្មក្នុងវគ្គ (Sprint)នេះ",
+    "steady": "ស្ថិរភាព",
+    "backlog": "ការងារដែលនៅសល់ (Backlog)",
+    "tasksDue": "ភារកិច្ចដល់កំណត់ {count} ថ្ងៃនេះ",
+    "estimatedHours": "ការប៉ាន់ស្មាន {count} ម៉ោង"
+  },
+  "Calendar": {
+    "title": "ទិដ្ឋភាពប្រតិទិន",
+    "today": "ថ្ងៃនេះ",
+    "day": "ថ្ងៃ",
+    "week": "សប្តាហ៍",
+    "month": "ខែ",
+    "createTask": "បង្កើតភារកិច្ច",
+    "jumpToDate": "ទៅកាន់កាលបរិច្ឆេទ",
+    "myCalendars": "ប្រតិទិនរបស់ខ្ញុំ",
+    "team": "ក្រុម",
+    "taskTitle": "ចំណងជើងភារកិច្ច",
+    "taskType": "ប្រភេទភារកិច្ច",
+    "saveTask": "រក្សាទុកភារកិច្ច",
+    "editTask": "កែសម្រួលភារកិច្ច",
+    "deleteTask": "លុបភារកិច្ច",
+    "days": {
+      "sun": "អាទិត្យ",
+      "mon": "ច័ន្ទ",
+      "tue": "អង្គារ",
+      "wed": "ពុធ",
+      "thu": "ព្រហស្បតិ៍",
+      "fri": "សុក្រ",
+      "sat": "សៅរ៍"
+    },
+    "fullDays": {
+      "sun": "ថ្ងៃអាទិត្យ",
+      "mon": "ថ្ងៃច័ន្ទ",
+      "tue": "ថ្ងៃអង្គារ",
+      "wed": "ថ្ងៃពុធ",
+      "thu": "ថ្ងៃព្រហស្បតិ៍",
+      "fri": "ថ្ងៃសុក្រ",
+      "sat": "ថ្ងៃសៅរ៍"
+    }
+  },
+  "Noted": {
+    "title": "កំណត់ចំណាំ",
+    "lastEdited": "បានកែសម្រួលចុងក្រោយ {time}",
+    "titleFor": "ចំណងជើងសម្រាប់ {date}",
+    "linkedTasks": "ភារកិច្ចដែលបានភ្ជាប់",
+    "referencedInNote": "បានយោងនៅក្នុងកំណត់ចំណាំ",
+    "mentions": "ការលើកឡើង",
+    "addLinkedTask": "បន្ថែមភារកិច្ចដែលបានភ្ជាប់",
+    "activeTasks": "កំពុងសកម្ម {count}",
+    "highPriority": "អាទិភាពខ្ពស់",
+    "due": "ដល់កំណត់: {date}",
+    "insertLink": "បញ្ចូលតំណភ្ជាប់",
+    "displayLinkText": "អត្ថបទបង្ហាញ",
+    "displayLinkAddress": "អាសយដ្ឋាន",
+    "months": {
+      "jan": "មករា",
+      "feb": "កុម្ភៈ",
+      "mar": "មីនា",
+      "apr": "មេសា",
+      "may": "ឧសភា",
+      "jun": "មិថុនា",
+      "jul": "កក្កដា",
+      "aug": "សីហា",
+      "sep": "កញ្ញា",
+      "oct": "តុលា",
+      "nov": "វិច្ឆិកា",
+      "dec": "ធ្នូ"
+    }
+  },
+  "Tasks": {
+    "title": "ភារកិច្ច និងកំណត់ចំណាំឆ្លាតវៃ",
+    "inputPlaceholder": "វាយបញ្ចូលកំណត់ចំណាំនៅទីនេះ (ឧទាហរណ៍៖ 'ជួសជុលការចូល និងធ្វើបច្ចុប្បន្នភាព UI')...",
+    "convertButton": "បំប្លែងទៅជាភារកិច្ច",
+    "noTasks": "មិនទាន់មានភារកិច្ចនៅឡើយទេ។ បញ្ចូលកំណត់ចំណាំដើម្បីទាញយកភារកិច្ច!",
+    "priority": {
+      "Low": "ទាប",
+      "Medium": "មធ្យម",
+      "High": "ខ្ពស់",
+      "Critical": "សំខាន់បំផុត"
+    },
+    "deadline": {
+      "overdue": "ហួសកំណត់",
+      "dueSoon": "ជិតដល់កំណត់",
+      "upcoming": "ខាងមុខ"
+    }
+  },
+  "Planner": {
+    "title": "អ្នករៀបចំផែនការ (Planner)",
+    "addColumn": "បន្ថែមបញ្ជីថ្មី",
+    "newList": "បញ្ជីថ្មី",
+    "newTask": "ភារកិច្ចថ្មី",
+    "columns": {
+      "backlog": "ការងារដែលនៅសល់ (Backlog)",
+      "inProgress": "កំពុងអនុវត្ត",
+      "testing": "កំពុងសាកល្បង",
+      "done": "រួចរាល់"
+    },
+    "header": {
+      "view": "មើល",
+      "filter": "តម្រង",
+      "share": "ចែករំលែក",
+      "customize": "កំណត់តាមបំណង"
+    }
+  },
+  "Team": {
+    "pageTitle": "សមាជិកក្រុម",
+    "pageDescription": "គ្រប់គ្រងសមាជិកនៃស្ថាប័នរបស់អ្នក និងកម្រិតចូលប្រើប្រាស់របស់ពួកគេនៅក្នុងកន្លែងធ្វើការ និងក្តារការងារផ្សេងៗ។",
+    "inviteMember": "អញ្ជើញសមាជិក",
+    "noMembersFound": "រកមិនឃើញសមាជិកនៅក្នុងកន្លែងធ្វើការនេះទេ។",
+    "lastActive": "សកម្មចុងក្រោយ {time}",
+    "joinedBoards": "ក្តារការងារដែលបានចូលរួម",
+    "noBoards": "មិនទាន់មានក្តារការងារដែលបានចូលរួមនៅឡើយទេ។",
+    "updateMember": {
+      "title": "ធ្វើបច្ចុប្បន្នភាពសមាជិក",
+      "description": "ផ្លាស់ប្តូរតួនាទីសមាជិក ឬព័ត៌មានមូលដ្ឋាន។"
+    },
+    "inviteNewMember": {
+      "title": "អញ្ជើញសមាជិកថ្មី",
+      "description": "ផ្ញើការអញ្ជើញឱ្យចូលរួមក្នុងកន្លែងធ្វើការរបស់អ្នក។",
+      "emailInstruction": "ពួកគេនឹងទទួលបានការអញ្ជើញតាមរយៈអ៊ីមែលដើម្បីចូលរួមក្នុងកន្លែងធ្វើការនេះ។",
+      "fullName": "ឈ្មោះពេញ",
+      "emailAddress": "អាសយដ្ឋានអ៊ីមែល",
+      "availableRoles": "តួនាទីដែលអាចមាន",
+      "sendInvitation": "ផ្ញើការអញ្ជើញ"
+    }
+  },
+  "Settings": {
+    "pageTitle": "ការកំណត់កន្លែងធ្វើការ",
+    "pageDescription": "គ្រប់គ្រងការកំណត់រចនាសម្ព័ន្ធ និងអត្តសញ្ញាណនៃកន្លែងធ្វើការរបស់ក្រុមអ្នក។",
+    "generalSettings": "ការកំណត់ទូទៅ",
+    "workspaceName": "ឈ្មោះកន្លែងធ្វើការ",
+    "workspaceNamePlaceholder": "ឧទាហរណ៍៖ Acme Corp",
+    "workspaceDescription": "ការពិពណ៌នាអំពីកន្លែងធ្វើការ",
+    "workspaceDescriptionPlaceholder": "តើកន្លែងធ្វើការនេះសម្រាប់អ្វី?",
+    "workspaceDomain": "URL កន្លែងធ្វើការ / ដែន (Domain)",
+    "workspaceDomainPlaceholder": "ឧទាហរណ៍៖ acme-corp",
+    "saving": "កំពុងរក្សាទុក...",
+    "saveChanges": "រក្សាទុកការផ្លាស់ប្តូរ",
+    "saveSuccess": "រក្សាទុកការកំណត់កន្លែងធ្វើការដោយជោគជ័យ!",
+    "dangerZone": "តំបន់គ្រោះថ្នាក់",
+    "dangerZoneDescription": "លុបកន្លែងធ្វើការនេះជាអចិន្ត្រៃយ៍ រួមទាំងក្តារការងារ កាត និងការផ្សារភ្ជាប់ជាមួយក្រុមទាំងអស់។",
+    "deleteWorkspace": "លុបកន្លែងធ្វើការ",
+    "confirmDelete": "តើអ្នកប្រាកដថាចង់លុបកន្លែងធ្វើការនេះជាអចិន្ត្រៃយ៍មែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់ក្រោយវិញបានទេ។",
+    "deleteSuccess": "បានលុបកន្លែងធ្វើការ! (សកម្មភាពសាកល្បង)"
+  },
+  "Deadlines": {
+    "title": "ការតាមដានកាលបរិច្ឆេទកំណត់ (Deadlines Tracker)",
+    "placeholder": "កន្លែងសម្រាប់មុខងារ៖ បង្ហាញប្រតិទិន ឬបញ្ជីភារកិច្ចដែលសំខាន់ និងហួសកំណត់។"
+  }
+}

@@ -1,0 +1,72 @@
+# Implementation Plan - Full Project Localization (next-intl)
+
+Apply comprehensive localization to the Phdaot project using `next-intl` with path-based routing (`/[locale]/...`).
+
+## User Review Required
+
+> [!IMPORTANT]
+> This plan involves moving all files currently in `src/app/` (except `[locale]` and `globals.css`) into the `src/app/[locale]/` directory. This is standard for `next-intl` but will temporarily break any hardcoded links that don't account for the locale prefix.
+
+> [!TIP]
+> We will implement a `navigation.ts` utility that provides localized `Link`, `useRouter`, and `usePathname` to make this transition seamless for developers.
+
+## Proposed Changes
+
+### 1. I18n Configuration & Navigation Helpers
+Group the i18n logic into a dedicated directory for better maintainability.
+
+#### [NEW] [routing.ts](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/i18n/routing.ts)
+Define supported locales and default locale in a central place.
+#### [NEW] [navigation.ts](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/i18n/navigation.ts)
+Create shared navigation helpers using `createNavigation` (or `createSharedPathnamesNavigation`) from `next-intl`.
+
+### 2. Middleware & Global Config
+#### [MODIFY] [middleware.ts](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/middleware.ts)
+Update to use the shared routing configuration.
+#### [MODIFY] [i18n.ts](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/i18n.ts)
+Update to use shared routing configuration.
+
+### 3. File System Restructuring
+#### [MOVE] All feature folders from `src/app/` to `src/app/[locale]/`
+- `analytics` -> `src/app/[locale]/analytics`
+- `daily-activity` -> `src/app/[locale]/daily-activity`
+- `deadlines` -> `src/app/[locale]/deadlines`
+- `design-system` -> `src/app/[locale]/design-system`
+- `noted` -> `src/app/[locale]/noted`
+- `planner` -> `src/app/[locale]/planner`
+- `settings` -> `src/app/[locale]/settings`
+- `tasks` -> `src/app/[locale]/tasks`
+
+#### [DELETE] Redundant root files
+- `src/app/layout.tsx` (Logic moved to `src/app/[locale]/layout.tsx`)
+- `src/app/page.tsx` (Logic moved to `src/app/[locale]/page.tsx`)
+- `src/app/team` (Duplicate of `src/app/[locale]/team`)
+
+### 4. UI Components Localization
+#### [MODIFY] [Header.tsx](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/components/layout/Header.tsx)
+- Implement `useTranslations` for search placeholder and menu items.
+- Add a **Language Switcher** dropdown (English/Khmer).
+- Switch `Link` from `next/link` to `@/i18n/navigation`.
+
+#### [MODIFY] [Sidebar.tsx](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/components/layout/Sidebar.tsx)
+- Implement `useTranslations` for navigation labels.
+- Switch `Link` from `next/link` to `@/i18n/navigation`.
+
+#### [MODIFY] [layout.tsx (Locale)](file:///d:/SothyProject/NestJs/sansam_pdoud/Phdaot/src/app/[locale]/layout.tsx)
+- Ensure correct `lang` attribute and font initialization.
+
+## Open Questions
+
+- Should we support "locale-less" URLs (e.g., `/dashboard` redirecting to `/en/dashboard`)? The plan assumes standard prefixing.
+- Do we have Khmer translations ready for all new sections, or should I scaffold them with English keys?
+
+## Verification Plan
+
+### Automated Tests
+- Check if all routes are accessible via `/en/...` and `/km/...`.
+- Verify middleware redirects root `/` to `/en`.
+
+### Manual Verification
+- Test language switching via the Header.
+- Ensure all sidebar links preserve the current locale.
+- Verify that "Boards", "Daily Activity", etc., translate correctly when switching to Khmer.

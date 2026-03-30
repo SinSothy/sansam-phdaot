@@ -1,19 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export function Sidebar() {
+  const t = useTranslations('Nav');
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems = [
-    { href: '/', icon: 'dashboard', label: 'Boards' },
-    { href: '/daily-activity', icon: 'calendar_month', label: 'Daily Activity' },
-    { href: '/noted', icon: 'sticky_note_2', label: 'Noted' },
-    { href: '/analytics', icon: 'analytics', label: 'Analytics' },
-    { href: '/team', icon: 'group', label: 'Members' },
+    { href: '/', icon: 'dashboard', label: t('boards') },
+    { href: '/daily-activity', icon: 'calendar_month', label: t('dailyActivity') },
+    { href: '/noted', icon: 'sticky_note_2', label: t('noted') },
+    { href: '/analytics', icon: 'analytics', label: t('analytics') },
+    { href: '/team', icon: 'group', label: t('members') },
   ];
 
   return (
@@ -51,7 +52,7 @@ export function Sidebar() {
         <button 
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center px-3 py-2.5 w-full rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all duration-200"
-          title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          title={isCollapsed ? t('expand') : t('collapse')}
         >
           <span className="material-symbols-outlined text-[20px] shrink-0 transition-transform duration-300">
             {isCollapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'}
@@ -61,7 +62,7 @@ export function Sidebar() {
               isCollapsed ? 'w-0 opacity-0 ml-0' : 'w-40 opacity-100 ml-3'
             }`}
           >
-            Collapse
+            {isCollapsed ? '' : t('collapse')}
           </span>
         </button>
       </div>

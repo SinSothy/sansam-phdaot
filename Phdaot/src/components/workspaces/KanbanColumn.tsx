@@ -19,6 +19,8 @@ export type KanbanColumnProps = {
   onDeleteCard: (cardId: string) => void;
 };
 
+import { useTranslations } from 'next-intl';
+
 export function KanbanColumn({ 
   id, 
   index, 
@@ -32,7 +34,7 @@ export function KanbanColumn({
   onUpdateCardTitle,
   onDeleteCard
 }: KanbanColumnProps) {
-  
+  const t = useTranslations('Planner');
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
 
@@ -127,7 +129,7 @@ export function KanbanColumn({
                   className="flex items-center gap-2 w-full p-3 rounded-xl text-secondary hover:bg-surface-container-low transition-colors text-sm font-medium mt-1 shrink-0"
                 >
                   <span className="material-symbols-outlined text-lg">add</span>
-                  Add a card
+                  {t('newTask')}
                 </button>
               </div>
             )}

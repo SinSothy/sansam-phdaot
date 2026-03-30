@@ -1,0 +1,248 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "leave": "Leave",
+    "boards": "Boards"
+  },
+  "Errors": {
+    "unexpected": "An unexpected error occurred. Please try again.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "noPermission": "You do not have permission to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "network": "Network error. Please check your internet connection.",
+    "errorCode": "Error Code: {code}"
+  },
+  "Nav": {
+    "boards": "Boards",
+    "dailyActivity": "Daily Activity",
+    "noted": "Noted",
+    "analytics": "Analytics",
+    "members": "Members",
+    "collapse": "Collapse",
+    "expand": "Expand"
+  },
+  "Header": {
+    "searchPlaceholder": "Search analytics, tasks, or members...",
+    "notifications": "Notifications",
+    "markAllRead": "Mark all as read",
+    "viewAllNotifications": "View all notifications",
+    "help": "Help",
+    "documentation": "Documentation",
+    "contactSupport": "Contact Support",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "whatsNew": "What's New",
+    "settings": "Settings",
+    "preferences": "Preferences",
+    "theme": "Theme",
+    "privacy": "Privacy",
+    "profile": "Profile",
+    "manageProfile": "Manage Profile",
+    "workspaces": "Workspaces",
+    "logout": "Log out"
+  },
+  "Dashboard": {
+    "kanbanClarity": "Kanban Clarity",
+    "designSystemTeam": "Design System Team",
+    "mobileAppDev": "Mobile App Development",
+    "boards": "Boards",
+    "filter": "Filter",
+    "view": "View",
+    "recentlyViewed": "Recently viewed",
+    "createNewBoard": "Create new board",
+    "yourWorkspaces": "Your Workspaces",
+    "membersCount": "Members ({count})",
+    "settings": "Settings",
+    "active": "Active",
+    "updating": "Updating",
+    "archived": "Archived",
+    "newBoardInWorkspace": "New Board in {workspace}",
+    "boardTitles": {
+      "marketing": "Q4 Marketing Campaign",
+      "research": "UX Research Repo",
+      "roadmap": "2024 Product Roadmap",
+      "componentLibrary": "Component Library",
+      "docHub": "Documentation Hub",
+      "brandAssets": "Brand Assets",
+      "archive2023": "Archive 2023",
+      "appLaunch": "App Launch Master",
+      "iosSprint": "iOS Sprint 12",
+      "androidSprint": "Android Sprint 12"
+    },
+    "appLaunchDesc": "Central hub for all launch deliverables and cross-functional syncing."
+  },
+  "Analytics": {
+    "pageTitle": "Analytics Overview",
+    "pageSubtitle": "Track your organization's performance and velocity.",
+    "projectAnalytics": "Project Analytics",
+    "realTimeMetrics": "Real-time performance metrics for {name}",
+    "workspace": "Workspace",
+    "project": "Project",
+    "last30days": "Last 30 Days",
+    "quarterly": "Quarterly",
+    "customRange": "Custom Range",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "applyRange": "Apply Range",
+    "totalProjects": "Total Projects",
+    "completedProjects": "Completed Projects",
+    "inProgressTasks": "In Progress Tasks",
+    "toDoTasks": "To Do Tasks",
+    "activeThisSprint": "Active this sprint",
+    "steady": "Steady",
+    "backlog": "Backlog",
+    "tasksDue": "{count} tasks due today",
+    "estimatedHours": "Estimated {count} hours"
+  },
+  "Calendar": {
+    "title": "Calendar View",
+    "today": "Today",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "createTask": "Create Task",
+    "jumpToDate": "Jump to Date",
+    "myCalendars": "My Calendars",
+    "team": "Team",
+    "taskTitle": "Task Title",
+    "taskType": "Task Type",
+    "saveTask": "Save Task",
+    "editTask": "Edit Task",
+    "deleteTask": "Delete Task",
+    "days": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "fullDays": {
+      "sun": "Sunday",
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday"
+    }
+  },
+  "Noted": {
+    "title": "Notes Entry",
+    "lastEdited": "Last edited {time}",
+    "titleFor": "Title for {date}",
+    "linkedTasks": "Linked Tasks",
+    "referencedInNote": "Referenced in Note",
+    "mentions": "Mentions",
+    "addLinkedTask": "Add Linked Task",
+    "activeTasks": "{count} Active",
+    "highPriority": "High Priority",
+    "due": "Due: {date}",
+    "insertLink": "Insert Link",
+    "displayLinkText": "Text to display",
+    "displayLinkAddress": "Address",
+    "months": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    }
+  },
+  "Tasks": {
+    "title": "Smart Tasks & Notes",
+    "inputPlaceholder": "Type notes here (e.g. 'Fix login and update UI')...",
+    "convertButton": "Convert to Tasks",
+    "noTasks": "No tasks yet. Enter a note to extract tasks!",
+    "priority": {
+      "Low": "Low",
+      "Medium": "Medium",
+      "High": "High",
+      "Critical": "Critical"
+    },
+    "deadline": {
+      "overdue": "Overdue",
+      "dueSoon": "Due Soon",
+      "upcoming": "Upcoming"
+    }
+  },
+  "Planner": {
+    "title": "Planner",
+    "addColumn": "Add another list",
+    "newList": "New List",
+    "newTask": "New task",
+    "columns": {
+      "backlog": "Backlog",
+      "inProgress": "In Progress",
+      "testing": "Testing",
+      "done": "Done"
+    },
+    "header": {
+      "view": "View",
+      "filter": "Filter",
+      "share": "Share",
+      "customize": "Customize"
+    }
+  },
+  "Team": {
+    "pageTitle": "Team members",
+    "pageDescription": "Manage your organization's members and their access levels across various workspaces and boards.",
+    "inviteMember": "Invite member",
+    "noMembersFound": "No members found in this workspace.",
+    "lastActive": "Last active {time}",
+    "joinedBoards": "Joined Boards",
+    "noBoards": "No boards joined yet.",
+    "updateMember": {
+      "title": "Update Member",
+      "description": "Change member role or basic information."
+    },
+    "inviteNewMember": {
+      "title": "Invite New Member",
+      "description": "Send an invitation to join your workspace.",
+      "emailInstruction": "They will receive an email invitation to join this workspace.",
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "availableRoles": "Available Roles",
+      "sendInvitation": "Send Invitation"
+    }
+  },
+  "Settings": {
+    "pageTitle": "Workspace Settings",
+    "pageDescription": "Manage your team's workspace configuration and identity.",
+    "generalSettings": "General Settings",
+    "workspaceName": "Workspace Name",
+    "workspaceNamePlaceholder": "e.g. Acme Corp",
+    "workspaceDescription": "Workspace Description",
+    "workspaceDescriptionPlaceholder": "What is this workspace for?",
+    "workspaceDomain": "Workspace URL / Domain",
+    "workspaceDomainPlaceholder": "e.g. acme-corp",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "saveSuccess": "Workspace settings saved successfully!",
+    "dangerZone": "Danger Zone",
+    "dangerZoneDescription": "Permanently delete this workspace and all of its boards, cards, and team associations.",
+    "deleteWorkspace": "Delete Workspace",
+    "confirmDelete": "Are you sure you want to permanently delete this workspace? This action cannot be undone.",
+    "deleteSuccess": "Workspace deleted! (Mock action)"
+  },
+  "Deadlines": {
+    "title": "Deadlines Tracker",
+    "placeholder": "Feature Placeholder: Calendar or list view highlighting critical and overdue tasks."
+  }
+}

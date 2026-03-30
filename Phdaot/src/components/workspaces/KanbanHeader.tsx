@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 export function KanbanHeader() {
+  const t = useTranslations('Planner');
+
   return (
     <header className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md w-full sticky top-[0px] z-40 flex items-center justify-between px-6 py-2 bg-slate-50 dark:bg-slate-950/40 border-b border-outline-variant/30">
       <div className="flex items-center gap-4">
@@ -18,11 +21,11 @@ export function KanbanHeader() {
       <div className="flex items-center gap-1">
         <button className="flex items-center gap-2 px-3 py-1.5 text-slate-600 dark:text-slate-400 font-medium hover:bg-white/80 dark:hover:bg-slate-800/80 rounded-md transition-all">
           <span className="material-symbols-outlined text-xl">filter_list</span>
-          <span className="text-sm">Filter</span>
+          <span className="text-sm">{t('header.filter')}</span>
         </button>
         <button className="flex items-center gap-2 px-3 py-1.5 text-slate-600 dark:text-slate-400 font-medium hover:bg-white/80 dark:hover:bg-slate-800/80 rounded-md transition-all">
           <span className="material-symbols-outlined text-xl">visibility</span>
-          <span className="text-sm">Visibility</span>
+          <span className="text-sm">{t('header.view')}</span>
         </button>
         <button className="flex items-center gap-2 px-3 py-1.5 text-slate-600 dark:text-slate-400 font-medium hover:bg-white/80 dark:hover:bg-slate-800/80 rounded-md transition-all">
           <span className="material-symbols-outlined text-xl">smart_toy</span>

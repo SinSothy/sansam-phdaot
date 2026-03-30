@@ -8,6 +8,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { Dialog, DialogFooter } from "@/components/ui/dialog";
 import { MemberAction } from "@/components/team/MemberAction";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface Board {
   id: string;
@@ -34,6 +35,7 @@ const AVATAR_COLORS = [
 ];
 
 export default function TeamPage() {
+  const t = useTranslations();
   const [members, setMembers] = useState<Member[]>([
     { 
       id: "1", 
@@ -126,9 +128,9 @@ export default function TeamPage() {
       {/* Header Section */}
       <div className="flex items-end justify-between border-b pb-6 border-outline-variant">
         <div className="space-y-1">
-          <Typography variant="h1" className="text-3xl">Team members</Typography>
+          <Typography variant="h1" className="text-3xl">{t('Team.pageTitle')}</Typography>
           <Typography variant="body" className="text-secondary max-w-lg">
-            Manage your organization's members and their access levels across various workspaces and boards.
+            {t('Team.pageDescription')}
           </Typography>
         </div>
         <Button 
@@ -139,7 +141,7 @@ export default function TeamPage() {
           }}
         >
           <span className="material-symbols-outlined text-lg">person_add</span>
-          Invite member
+          {t('Team.inviteMember')}
         </Button>
       </div>
 
@@ -147,7 +149,7 @@ export default function TeamPage() {
       <div className="space-y-2">
         {members.length === 0 ? (
           <div className="py-20 text-center bg-surface-container-low rounded-3xl border border-dashed border-outline-variant">
-            <Typography variant="body" className="opacity-50">No members found in this workspace.</Typography>
+            <Typography variant="body" className="opacity-50">{t('Team.noMembersFound')}</Typography>
           </div>
         ) : (
           members.map((member) => (
@@ -169,7 +171,7 @@ export default function TeamPage() {
                     <Typography variant="body" className="text-xs text-secondary opacity-70">{member.username}</Typography>
                   </div>
                   <Typography variant="caption" className="text-secondary font-medium tracking-normal normal-case">
-                    Last active {member.lastActive}
+                    {t('Team.lastActive', {time: member.lastActive})}
                   </Typography>
                 </div>
               </div>
@@ -195,13 +197,13 @@ export default function TeamPage() {
       <Dialog 
         isOpen={isUpdateDialogOpen} 
         onClose={() => setIsUpdateDialogOpen(false)}
-        title="Update Member"
-        description="Change member role or basic information."
+        title={t('Team.updateMember.title')}
+        description={t('Team.updateMember.description')}
         className="max-w-md"
       >
         <div className="space-y-5">
            <Input 
-             label="Full Name" 
+             label={t('Team.inviteNewMember.fullName')} 
              value={formData.name}
              onChange={(e) => setFormData({...formData, name: e.target.value})}
              placeholder="Enter name"
@@ -220,8 +222,8 @@ export default function TeamPage() {
            />
            
            <DialogFooter>
-             <Button variant="ghost" onClick={() => setIsUpdateDialogOpen(false)}>Cancel</Button>
-             <Button onClick={handleUpdate}>Save Changes</Button>
+             <Button variant="ghost" onClick={() => setIsUpdateDialogOpen(false)}>{t('Common.cancel')}</Button>
+             <Button onClick={handleUpdate}>{t('Common.save')}</Button>
            </DialogFooter>
         </div>
       </Dialog>
@@ -230,33 +232,33 @@ export default function TeamPage() {
       <Dialog 
         isOpen={isInviteDialogOpen} 
         onClose={() => setIsInviteDialogOpen(false)}
-        title="Invite New Member"
-        description="Send an invitation to join your workspace."
+        title={t('Team.inviteNewMember.title')}
+        description={t('Team.inviteNewMember.description')}
         className="max-w-md"
       >
         <div className="space-y-5">
            <div className="bg-primary-container/10 p-4 rounded-2xl flex items-center gap-3 border border-primary/20">
               <span className="material-symbols-outlined text-primary text-3xl">mail</span>
               <Typography variant="body" className="text-xs text-primary font-medium">
-                They will receive an email invitation to join this workspace.
+                {t('Team.inviteNewMember.emailInstruction')}
               </Typography>
            </div>
 
            <Input 
-             label="Full Name" 
+             label={t('Team.inviteNewMember.fullName')} 
              value={formData.name}
              onChange={(e) => setFormData({...formData, name: e.target.value})}
              placeholder="e.g. John Doe"
            />
            <Input 
-             label="Email Address" 
+             label={t('Team.inviteNewMember.emailAddress')} 
              value={formData.email}
              onChange={(e) => setFormData({...formData, email: e.target.value})}
              placeholder="john@example.com"
            />
            
            <div className="pt-2">
-             <Typography variant="label" className="mb-2 block">Available Roles</Typography>
+             <Typography variant="label" className="mb-2 block">{t('Team.inviteNewMember.availableRoles')}</Typography>
              <div className="grid grid-cols-2 gap-2">
                 {["Admin", "Member"].map(role => (
                    <button
@@ -276,8 +278,8 @@ export default function TeamPage() {
            </div>
            
            <DialogFooter>
-             <Button variant="ghost" onClick={() => setIsInviteDialogOpen(false)}>Cancel</Button>
-             <Button onClick={handleInvite} fullWidth>Send Invitation</Button>
+             <Button variant="ghost" onClick={() => setIsInviteDialogOpen(false)}>{t('Common.cancel')}</Button>
+             <Button onClick={handleInvite} fullWidth>{t('Team.inviteNewMember.sendInvitation')}</Button>
            </DialogFooter>
         </div>
       </Dialog>

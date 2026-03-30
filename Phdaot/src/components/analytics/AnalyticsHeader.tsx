@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 export function AnalyticsHeader() {
+  const t = useTranslations('Analytics');
   const [activeTab, setActiveTab] = useState<'30days' | 'quarterly' | 'custom'>('30days');
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
@@ -29,8 +31,8 @@ export function AnalyticsHeader() {
   return (
     <div ref={headerRef} className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100 relative z-20">
       <div>
-        <h2 className="text-3xl font-black tracking-tight text-slate-900">Project Analytics</h2>
-        <p className="text-slate-500 mt-1.5 text-sm font-medium">Real-time performance metrics for Project Alpha</p>
+        <h2 className="text-3xl font-black tracking-tight text-slate-900">{t('projectAnalytics')}</h2>
+        <p className="text-slate-500 mt-1.5 text-sm font-medium">{t('realTimeMetrics', {name: project})}</p>
       </div>
       <div className="flex flex-wrap items-center gap-4">
         
@@ -40,7 +42,7 @@ export function AnalyticsHeader() {
           {/* Workspace Dropdown */}
           <div className="flex items-center pl-2 group relative">
             <div className="flex flex-col justify-center">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-0.5">Workspace</span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-0.5">{t('workspace')}</span>
               <button 
                 onClick={() => { setIsWorkspaceOpen(!isWorkspaceOpen); setIsProjectOpen(false); setIsCalendarOpen(false); }}
                 className="flex items-center justify-between w-40 bg-transparent hover:bg-slate-50 pl-2 pr-2 py-1.5 text-sm font-bold text-slate-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 border border-transparent hover:border-slate-200"
@@ -71,7 +73,7 @@ export function AnalyticsHeader() {
           {/* Project Dropdown */}
           <div className="flex items-center pr-1 group relative">
             <div className="flex flex-col justify-center">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-0.5">Project</span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-0.5">{t('project')}</span>
               <button 
                 onClick={() => { setIsProjectOpen(!isProjectOpen); setIsWorkspaceOpen(false); setIsCalendarOpen(false); }}
                 className="flex items-center justify-between w-40 bg-transparent hover:bg-slate-50 pl-2 pr-2 py-1.5 text-sm font-bold text-slate-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 border border-transparent hover:border-slate-200"
@@ -105,19 +107,19 @@ export function AnalyticsHeader() {
             onClick={() => setActiveTab('30days')}
             className={`relative px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 z-10 ${activeTab === '30days' ? 'text-slate-800 shadow-sm bg-white border border-slate-200/60' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 border border-transparent'}`}
           >
-            Last 30 Days
+            {t('last30days')}
           </button>
           <button 
             onClick={() => setActiveTab('quarterly')}
             className={`relative px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 z-10 ${activeTab === 'quarterly' ? 'text-slate-800 shadow-sm bg-white border border-slate-200/60' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 border border-transparent'}`}
           >
-            Quarterly
+            {t('quarterly')}
           </button>
           <button 
             onClick={() => setActiveTab('custom')}
             className={`relative px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 z-10 ${activeTab === 'custom' ? 'text-slate-800 shadow-sm bg-white border border-slate-200/60' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 border border-transparent'}`}
           >
-            Custom Range
+            {t('customRange')}
           </button>
           
           <div className="w-px h-6 bg-slate-300 mx-1"></div>
@@ -136,18 +138,18 @@ export function AnalyticsHeader() {
             {isCalendarOpen && (
               <div className="absolute top-full right-0 mt-3 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-4 origin-top-right duration-300 z-50">
                 <div className="p-4 border-b border-slate-100 bg-slate-50/50">
-                  <h4 className="text-sm font-bold text-slate-800">Custom Date Range</h4>
+                  <h4 className="text-sm font-bold text-slate-800">{t('customRange')}</h4>
                   <p className="text-[10px] text-slate-500 font-medium mt-0.5">Select a start and end date</p>
                 </div>
                 <div className="p-4 flex flex-col gap-4">
                   <div className="flex items-center gap-2">
                     <div className="flex-1">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Start Date</label>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">{t('startDate')}</label>
                       <input type="date" className="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary" defaultValue="2023-09-01" />
                     </div>
                     <div className="w-4 h-px bg-slate-300 mt-5"></div>
                     <div className="flex-1">
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">End Date</label>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">{t('endDate')}</label>
                       <input type="date" className="w-full text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary" defaultValue="2023-09-30" />
                     </div>
                   </div>
@@ -160,8 +162,8 @@ export function AnalyticsHeader() {
                   </div>
                 </div>
                 <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-2">
-                  <button onClick={() => setIsCalendarOpen(false)} className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-200/50 rounded-lg transition-colors">Cancel</button>
-                  <button onClick={() => setIsCalendarOpen(false)} className="px-4 py-2 text-xs font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-colors shadow-sm">Apply Range</button>
+                  <button onClick={() => setIsCalendarOpen(false)} className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-200/50 rounded-lg transition-colors">{t('Common.cancel')}</button>
+                  <button onClick={() => setIsCalendarOpen(false)} className="px-4 py-2 text-xs font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-colors shadow-sm">{t('applyRange')}</button>
                 </div>
               </div>
             )}

@@ -47,7 +47,10 @@ const initialTasks: Task[] = [
   },
 ];
 
+import { useTranslations } from "next-intl";
+
 export function TaskList() {
+  const t = useTranslations('Tasks');
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [noteInput, setNoteInput] = useState("");
 
@@ -90,31 +93,31 @@ export function TaskList() {
     const due = new Date(deadline);
     const diffHours = (due.getTime() - now.getTime()) / (1000 * 60 * 60);
     
-    if (diffHours < 0) return { label: "Overdue", color: "text-red-500", bg: "bg-red-500/10 border-red-500" };
-    if (diffHours < 24) return { label: "Due Soon", color: "text-orange-500", bg: "bg-orange-500/10 border-orange-500" };
-    return { label: "Upcoming", color: "text-muted-foreground", bg: "bg-secondary text-secondary-foreground" };
+    if (diffHours < 0) return { label: t('deadline.overdue'), color: "text-red-500", bg: "bg-red-500/10 border-red-500" };
+    if (diffHours < 24) return { label: t('deadline.dueSoon'), color: "text-orange-500", bg: "bg-orange-500/10 border-orange-500" };
+    return { label: t('deadline.upcoming'), color: "text-muted-foreground", bg: "bg-secondary text-secondary-foreground" };
   };
 
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Smart Tasks & Notes</CardTitle>
+        <CardTitle>{t('title')}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4">
         <form onSubmit={handleConvertNote} className="flex gap-2">
           <Input 
-            placeholder="Type notes here (e.g. 'Fix login and update UI')..." 
+            placeholder={t('inputPlaceholder')} 
             value={noteInput}
             onChange={(e) => setNoteInput(e.target.value)}
           />
-          <Button type="submit">Convert to Tasks</Button>
+          <Button type="submit">{t('convertButton')}</Button>
         </form>
 
         <div className="flex-1 overflow-y-auto space-y-3">
           {tasks.map((task) => {
             const deadlineConfig = getDeadlineConfig(task.deadline);
             return (
-            <div key={task.id} className={`flex items-start gap-4 p-4 border rounded-xl transition-colors ${task.status === "Done" ? "opacity-60 bg-muted/20" : "bg-card hover:bg-muted/50"} ${deadlineConfig?.label === "Overdue" && task.status !== "Done" ? "border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.1)]" : "border-border shadow-sm"}`}>
+            <div key={task.id} className={`flex items-start gap-4 p-4 border rounded-xl transition-colors ${task.status === "Done" ? "opacity-60 bg-muted/20" : "bg-card hover:bg-muted/50"} ${deadlineConfig?.label === t('deadline.overdue') && task.status !== "Done" ? "border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.1)]" : "border-border shadow-sm"}`}>
               <Checkbox 
                 checked={task.status === "Done"} 
                 onCheckedChange={() => toggleTaskStatus(task.id)} 
@@ -126,7 +129,7 @@ export function TaskList() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <Badge variant="outline" className={cn(priorityColors[task.priority], "text-white border-transparent")}>
-                    {task.priority}
+                    {t(`priority.${task.priority}` as any)}
                   </Badge>
                   <Badge variant="secondary" className="bg-secondary/50 text-secondary-foreground border-transparent">
                     {task.owner}
@@ -147,7 +150,7 @@ export function TaskList() {
           })}
           {tasks.length === 0 && (
             <div className="text-center text-muted-foreground text-sm py-10">
-              No tasks yet. Enter a note to extract tasks!
+              {t('noTasks')}
             </div>
           )}
         </div>
