@@ -77,7 +77,20 @@
       "iosSprint": "iOS Sprint 12",
       "androidSprint": "Android Sprint 12"
     },
-    "appLaunchDesc": "Central hub for all launch deliverables and cross-functional syncing."
+    "appLaunchDesc": "Central hub for all launch deliverables and cross-functional syncing.",
+    "boardPreview": "Board Preview",
+    "liveVisual": "Live visual of your workspace",
+    "boardTitle": "Board Title",
+    "boardTitlePlaceholder": "e.g. Q4 Marketing Roadmap",
+    "visibility": "Visibility",
+    "workspaceLabel": "Workspace",
+    "private": "Private",
+    "public": "Public",
+    "background": "Background",
+    "browseAll": "Browse All",
+    "backgroundNote": "Boards with backgrounds help your team identify projects faster.",
+    "createBoardBtn": "Create Board",
+    "cancel": "Cancel"
   },
   "Analytics": {
     "pageTitle": "Analytics Overview",

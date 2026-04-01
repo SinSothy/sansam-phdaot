@@ -3,9 +3,19 @@
 import React from "react";
 import { BoardCard } from "@/components/ui/BoardCard";
 import { useTranslations } from "next-intl";
+import { CreateBoardDialog, BoardData } from "./CreateBoardDialog";
+import { toast } from "sonner";
 
 export function RecentlyViewed() {
   const t = useTranslations('Dashboard');
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+  const handleCreateBoard = (data: BoardData) => {
+    console.log("Creating board:", data);
+    toast.success(t('newBoardInWorkspace', { workspace: data.workspace }), {
+      description: data.title,
+    });
+  };
 
   return (
     <section className="mb-12">
@@ -31,11 +41,20 @@ export function RecentlyViewed() {
           gradientTo="to-teal-700"
         />
         {/* Create New Card */}
-        <div className="h-32 rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-low hover:bg-surface-container-high transition-all flex flex-col items-center justify-center cursor-pointer group">
+        <button 
+          onClick={() => setIsDialogOpen(true)}
+          className="h-32 rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-low hover:bg-surface-container-high transition-all flex flex-col items-center justify-center cursor-pointer group w-full"
+        >
           <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-3xl">add_circle</span>
           <span className="text-sm font-semibold text-secondary mt-2">{t('createNewBoard')}</span>
-        </div>
+        </button>
       </div>
+
+      <CreateBoardDialog 
+        isOpen={isDialogOpen} 
+        onClose={() => setIsDialogOpen(false)} 
+        onCreate={handleCreateBoard}
+      />
     </section>
   );
 }
