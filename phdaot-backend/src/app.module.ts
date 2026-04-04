@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { WorkspacesModule } from './modules/workspaces/workspaces.module';
-import { ProjectsModule } from './modules/projects/projects.module';
+import { BoardsModule } from './modules/boards/boards.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { NotesModule } from './modules/notes/notes.module';
 
@@ -23,7 +23,7 @@ import { NotesModule } from './modules/notes/notes.module';
     AuthModule,
     UsersModule,
     WorkspacesModule,
-    ProjectsModule,
+    BoardsModule,
     TasksModule,
     NotesModule,
   ],

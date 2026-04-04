@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Task = exports.TaskStatus = void 0;
 const typeorm_1 = require("typeorm");
 const project_entity_1 = require("../../projects/entities/project.entity");
+const board_entity_1 = require("../../boards/entities/board.entity");
 const user_entity_1 = require("../../users/entities/user.entity");
 var TaskStatus;
 (function (TaskStatus) {
@@ -50,12 +51,21 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)('uuid', { nullable: true }),
     __metadata("design:type", String)
+], Task.prototype, "board_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)('uuid', { nullable: true }),
+    __metadata("design:type", String)
 ], Task.prototype, "assignee_id", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => project_entity_1.Project),
     (0, typeorm_1.JoinColumn)({ name: 'project_id' }),
     __metadata("design:type", project_entity_1.Project)
 ], Task.prototype, "project", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => board_entity_1.Board, (board) => board.tasks),
+    (0, typeorm_1.JoinColumn)({ name: 'board_id' }),
+    __metadata("design:type", board_entity_1.Board)
+], Task.prototype, "board", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User),
     (0, typeorm_1.JoinColumn)({ name: 'assignee_id' }),

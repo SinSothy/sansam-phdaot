@@ -27,11 +27,9 @@ export default function CreateTaskDialog({ isOpen, onClose, selectedDate, editTa
   const [description, setDescription] = useState("");
   const [taskType, setTaskType] = useState("dark-blue");
 
-  const initialStart = selectedDate || new Date();
-  const initialEnd = new Date(initialStart.getTime() + 90 * 60000);
-
-  const [startDate, setStartDate] = useState<Date>(initialStart);
-  const [endDate, setEndDate] = useState<Date>(initialEnd);
+  // Use fixed date for initial SSR to avoid hydration mismatch
+  const [startDate, setStartDate] = useState<Date>(selectedDate || new Date('2024-10-01T00:00:00'));
+  const [endDate, setEndDate] = useState<Date>(new Date(startDate.getTime() + 90 * 60000));
   const [owner, setOwner] = useState<Owner>(mockOwners[0]);
 
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -64,6 +62,17 @@ export default function CreateTaskDialog({ isOpen, onClose, selectedDate, editTa
         setTaskType("dark-blue");
         setStartDate(selectedDate);
         setEndDate(new Date(selectedDate.getTime() + 90 * 60000));
+        setOwner(mockOwners[0]);
+        setLocation("");
+        setShowLocationInput(false);
+      } else {
+        // Fallback for FAB or other generic triggers
+        const now = new Date();
+        setTaskName("");
+        setDescription("");
+        setTaskType("dark-blue");
+        setStartDate(now);
+        setEndDate(new Date(now.getTime() + 90 * 60000));
         setOwner(mockOwners[0]);
         setLocation("");
         setShowLocationInput(false);

@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Workspace = void 0;
 const typeorm_1 = require("typeorm");
+const board_entity_1 = require("../../boards/entities/board.entity");
+const workspace_member_entity_1 = require("./workspace-member.entity");
 let Workspace = class Workspace {
 };
 exports.Workspace = Workspace;
@@ -38,6 +40,14 @@ __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Workspace.prototype, "created_at", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => board_entity_1.Board, (board) => board.workspace),
+    __metadata("design:type", Array)
+], Workspace.prototype, "boards", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => workspace_member_entity_1.WorkspaceMember, (member) => member.workspace),
+    __metadata("design:type", Array)
+], Workspace.prototype, "members", void 0);
 exports.Workspace = Workspace = __decorate([
     (0, typeorm_1.Entity)('workspaces')
 ], Workspace);

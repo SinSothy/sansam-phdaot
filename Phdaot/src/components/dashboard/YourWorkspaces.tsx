@@ -1,17 +1,27 @@
-"use client";
+'use client'
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { CreateBoardDialog, BoardData } from "./CreateBoardDialog";
+import { boardManager } from "@/api/managers/board.manager";
+import { useWorkspaceStore } from "@/api/store/useWorkspaceStore";
 import { toast } from "sonner";
 
 export function YourWorkspaces() {
   const t = useTranslations('Dashboard');
+  const { workspaces, isLoadingWorkspaces } = useWorkspaceStore();
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
+  useEffect(() => {
+    // Initial fetch of workspaces
+    if (workspaces.length === 0) {
+      boardManager.fetchWorkspaces();
+    }
+  }, [workspaces.length]);
+
   const handleCreateBoard = (data: BoardData) => {
-    console.log("Creating board:", data);
+    // This is now mainly for UI notification as CreateBoardDialog handles the manager call
     toast.success(t('newBoardInWorkspace', { workspace: data.workspace }), {
       description: data.title,
     });
@@ -87,9 +97,9 @@ export function YourWorkspaces() {
               </div>
             </div>
           </Link>
-          
+
           {/* Create New Board Card */}
-          <button 
+          <button
             onClick={() => setIsDialogOpen(true)}
             className="group relative h-40 rounded-xl border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-3 transition-all hover:border-primary hover:bg-primary/5 hover:shadow-xl active:scale-[0.98]"
           >
@@ -101,9 +111,9 @@ export function YourWorkspaces() {
         </div>
       </div>
 
-      <CreateBoardDialog 
-        isOpen={isDialogOpen} 
-        onClose={() => setIsDialogOpen(false)} 
+      <CreateBoardDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
         onCreate={handleCreateBoard}
       />
     </section>

@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Project } from '../../projects/entities/project.entity';
+import { Board } from '../../boards/entities/board.entity';
 import { User } from '../../users/entities/user.entity';
 
 export enum TaskStatus {
@@ -31,11 +32,18 @@ export class Task {
   project_id: string;
 
   @Column('uuid', { nullable: true })
+  board_id: string;
+
+  @Column('uuid', { nullable: true })
   assignee_id: string;
 
   @ManyToOne(() => Project)
   @JoinColumn({ name: 'project_id' })
   project: Project;
+
+  @ManyToOne(() => Board, (board) => board.tasks)
+  @JoinColumn({ name: 'board_id' })
+  board: Board;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'assignee_id' })

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
 
 type ViewMode = "Day" | "Week" | "Month";
 
@@ -30,7 +30,12 @@ export default function DailyActivityPage() {
   const [editingTask, setEditingTask] = useState<EventItem | null>(null);
   
   const scrollRef = useRef<HTMLDivElement>(null);
-  const today = new Date();
+  const format = useFormatter();
+  const [today, setToday] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setToday(new Date());
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current && (viewMode === 'Week' || viewMode === 'Day')) {
@@ -54,7 +59,11 @@ export default function DailyActivityPage() {
     setCurrentDate(newDate);
   };
 
-  const handleToday = () => setCurrentDate(new Date());
+  const handleToday = () => {
+    const now = new Date();
+    setCurrentDate(now);
+    setToday(now);
+  };
 
   const handleDayClick = (date: Date) => {
       setSelectedDate(date);
@@ -71,7 +80,7 @@ export default function DailyActivityPage() {
       setEvents(events.map(e => e.id === updatedTask.id ? updatedTask : e));
   };
 
-  const monthYearLabel = currentDate.toLocaleString(undefined, { month: "long", year: "numeric" });
+  const monthYearLabel = format.dateTime(currentDate, { month: "long", year: "numeric" });
 
   const getEventStyle = (type: string) => {
       switch (type) {
@@ -101,7 +110,7 @@ export default function DailyActivityPage() {
       t('days.sat')[0]
     ];
     const jumpDate = new Date(currentDate);
-    const monthYear = jumpDate.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+    const monthYear = format.dateTime(jumpDate, { month: 'long', year: 'numeric' });
     
     const startOfMonth = new Date(jumpDate.getFullYear(), jumpDate.getMonth(), 1);
     const endOfMonth = new Date(jumpDate.getFullYear(), jumpDate.getMonth() + 1, 0);
@@ -134,7 +143,7 @@ export default function DailyActivityPage() {
             </div>
             <div className="grid grid-cols-7 text-center gap-y-2">
                 {totalDays.map((item, i) => {
-                    const isToday = item.date.toDateString() === new Date().toDateString();
+                    const isToday = today && item.date.toDateString() === today.toDateString();
                     const isSelected = item.date.toDateString() === currentDate.toDateString();
                     let className = "text-xs cursor-pointer rounded-full w-6 h-6 flex items-center justify-center mx-auto transition-colors ";
                     if (isSelected) className += "bg-primary text-white font-medium";
@@ -237,7 +246,7 @@ export default function DailyActivityPage() {
               </div>
           </div>
 
-          {viewMode === "Month" && (
+          {viewMode === "Month" && today && (
             <MonthView
               currentDate={currentDate}
               today={today}

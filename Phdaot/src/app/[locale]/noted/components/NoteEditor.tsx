@@ -74,15 +74,15 @@ const initialMockNodes: NoteElement[] = [
 ];
 
 interface NoteEditorProps {
-  dateKey?: string;
+  dateKey: string;
 }
 
-export function NoteEditor({ dateKey = new Date().toDateString() }: NoteEditorProps) {
+export function NoteEditor({ dateKey }: NoteEditorProps) {
   const t = useTranslations('Noted');
   const commonT = useTranslations('Common');
   
   const [nodesMap, setNodesMap] = useState<Record<string, NoteElement[]>>({
-    [new Date('2024-10-12').toDateString()]: initialMockNodes
+    ['Sat Oct 12 2024']: initialMockNodes
   });
 
   const nodes = nodesMap[dateKey] || [];
@@ -90,7 +90,7 @@ export function NoteEditor({ dateKey = new Date().toDateString() }: NoteEditorPr
   const setNodes = (action: React.SetStateAction<NoteElement[]>) => {
     setNodesMap(prev => {
       const currNodes = prev[dateKey] || [];
-      const newNodes = typeof action === 'function' ? action(currNodes) : action;
+      const newNodes = typeof action === 'function' ? (action as any)(currNodes) : action;
       return { ...prev, [dateKey]: newNodes };
     });
   };
@@ -261,19 +261,19 @@ export function NoteEditor({ dateKey = new Date().toDateString() }: NoteEditorPr
   };
 
   const handleNodePositionChange = (id: string, x: number, y: number) => {
-    setNodes(nodes.map(n => n.id === id ? { ...n, x, y } : n));
+    setNodes(nodes.map((n: NoteElement) => n.id === id ? { ...n, x, y } : n));
   };
 
   const handleNodeResize = (id: string, width: number, height: number) => {
-    setNodes(nodes.map(n => n.id === id ? { ...n, width, height } : n));
+    setNodes(nodes.map((n: NoteElement) => n.id === id ? { ...n, width, height } : n));
   };
 
   const handleNodeRotate = (id: string, rotation: number) => {
-    setNodes(nodes.map(n => n.id === id ? { ...n, rotation } : n));
+    setNodes(nodes.map((n: NoteElement) => n.id === id ? { ...n, rotation } : n));
   };
 
   const handleTextContentChange = (id: string, content: string) => {
-    setNodes(nodes.map(n => n.id === id ? { ...n, content } : n));
+    setNodes(nodes.map((n: NoteElement) => n.id === id ? { ...n, content } : n));
   };
 
   const handleRemoveNode = (id: string) => {
@@ -365,7 +365,7 @@ export function NoteEditor({ dateKey = new Date().toDateString() }: NoteEditorPr
         onClick={handleCanvasClick}
         style={{ transform: `scale(${zoom})`, transition: 'transform 0.1s ease-out' }}
       >
-        {nodes.map(node => (
+        {nodes.map((node: NoteElement) => (
           <DraggableNode
             key={node.id}
             id={node.id}

@@ -1,0 +1,61 @@
+# Gitignore - Phdaot Monorepo
+# ---------------------------------------------------------
+
+# Operating System
+.DS_Store
+Thumbs.db
+*.pem
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+.history/
+.eslintcache
+
+# Development Tools
+node_modules/
+.dist/
+.next/
+.pnp
+.pnp.js
+.yarn/
+yarn-debug.log*
+yarn-error.log*
+npm-debug.log*
+.pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+.secret.local
+
+# Frontend - Phdaot
+# ---------------------------------------------------------
+Phdaot/.next/
+Phdaot/out/
+Phdaot/build/
+Phdaot/coverage/
+Phdaot/.vercel/
+Phdaot/node_modules/
+
+# Backend - phdaot-backend
+# ---------------------------------------------------------
+phdaot-backend/dist/
+phdaot-backend/node_modules/
+phdaot-backend/logs/
+phdaot-backend/*.log
+phdaot-backend/coverage/
+phdaot-backend/.nyc_output
+phdaot-backend/nest-cli.json
+phdaot-backend/tsconfig.tsbuildinfo

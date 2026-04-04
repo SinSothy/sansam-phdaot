@@ -8,15 +8,28 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // standard cors and api prefix for REST
+  // Dynamic configuration from environment
+  const port = process.env.PORT || 3001;
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000').split(',');
+  const apiPrefix = 'api';
+  
+  // Security headers
+  try {
+    const helmet = require('helmet');
+    app.use(helmet());
+  } catch (e) {
+    console.warn('[Security Warning]: Helmet not found. Consider running "npm install helmet".');
+  }
+  
+  // CORS configuration
   app.enableCors({
-    origin: '*',
+    origin: allowedOrigins,
     credentials: true,
   });
   
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(apiPrefix);
 
-  // Register Global Components
+  // Global validation and pipes
   app.useGlobalPipes(new ValidationPipe({ 
     whitelist: true, 
     transform: true,
@@ -25,7 +38,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new GlobalExceptionFilter());
   
-  // Swagger configuration
+  // Swagger documentation
   const config = new DocumentBuilder()
     .setTitle('Phdaot API')
     .setDescription('The Phdaot Project API documentation')
@@ -33,10 +46,10 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
   
-  await app.listen(3001);
-  console.log(`Application is running on: http://localhost:3001/api`);
-  console.log(`Swagger documentation: http://localhost:3001/api/docs`);
+  await app.listen(port);
+  console.log(`Application is running on: http://localhost:${port}/${apiPrefix}`);
+  console.log(`Swagger documentation: http://localhost:${port}/${apiPrefix}/docs`);
 }
 bootstrap();

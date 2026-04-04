@@ -1,12 +1,17 @@
-import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from "axios";
-import { Platform, RequestHeader, BaseRequest, ApiResponse } from "./types";
+import axios, {
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
+import { ApiResponse } from "./types";
+
 import { handleApiError } from "./error.handler";
 
 /**
  * Enterprise API Client Configuration
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -18,28 +23,15 @@ const apiClient = axios.create({
 
 /**
  * Request Interceptor
- * Automatically wraps every outgoing request (POST, PUT, PATCH) in the base envelope.
+ * Currently minimal, but can handle global things like Authorization headers.
  */
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Only wrap the body if it's a POST, PUT, or PATCH request
-    if (['post', 'put', 'patch'].includes(config.method?.toLowerCase() || '') && config.data) {
-      const header: RequestHeader = {
-        platform: Platform.WEB,
-        version: "1.0.0", // This can be pulled from a config file
-        requestID: `req-${Date.now()}`,
-        tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      };
-
-      // Wrap the original payload in the header/body structure
-      config.data = {
-        header,
-        body: config.data,
-      };
-    }
+    // Add auth token if available (cookie is usually handled by withCredentials,
+    // but JWT headers would go here).
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 /**
@@ -53,7 +45,9 @@ apiClient.interceptors.response.use(
     return response.data as any;
   },
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     // 1. Handle Token Refresh logic (401)
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -72,7 +66,7 @@ apiClient.interceptors.response.use(
     handleApiError(error);
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;

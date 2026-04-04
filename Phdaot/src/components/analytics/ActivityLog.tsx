@@ -1,13 +1,11 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Generates an array of generic activity values [0-4] to simulate github-style heatmaps
 const generateHeatmapData = (days: number) => {
   return Array.from({ length: days }, () => Math.floor(Math.random() * 5));
 };
-
-const heatmapData = generateHeatmapData(28); // 4 weeks
 
 const getHeatmapColor = (intensity: number) => {
   switch (intensity) {
@@ -27,6 +25,12 @@ const recentEvents = [
 ];
 
 export function ActivityLog() {
+  const [heatmapData, setHeatmapData] = useState<number[]>([]);
+
+  useEffect(() => {
+    setHeatmapData(generateHeatmapData(28));
+  }, []);
+
   return (
     <section className="bg-surface-container-lowest rounded-xl shadow-sm p-6 border border-outline-variant/10">
       <div className="flex items-center justify-between mb-4">
@@ -36,12 +40,20 @@ export function ActivityLog() {
       
       {/* Dynamic Heatmap */}
       <div className="grid grid-cols-7 gap-1.5 group cursor-help" title="4-week contribution density">
-        {heatmapData.map((val, i) => (
+        {heatmapData.length > 0 ? heatmapData.map((val, i) => (
           <div 
             key={i} 
             className={`aspect-square rounded-sm transition-all hover:scale-110 hover:shadow-sm ${getHeatmapColor(val)}`}
           ></div>
-        ))}
+        )) : (
+          // Placeholder for SSR
+          Array.from({ length: 28 }).map((_, i) => (
+            <div 
+              key={i} 
+              className="aspect-square rounded-sm bg-surface-container-highest opacity-20"
+            ></div>
+          ))
+        )}
       </div>
       
       {/* Dynamic Event Feed */}

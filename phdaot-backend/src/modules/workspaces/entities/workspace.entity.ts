@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Board } from '../../boards/entities/board.entity';
+import { WorkspaceMember } from './workspace-member.entity';
 
 @Entity('workspaces')
 export class Workspace {
@@ -19,4 +21,10 @@ export class Workspace {
   
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToMany(() => Board, (board) => board.workspace)
+  boards: Board[];
+
+  @OneToMany(() => WorkspaceMember, (member) => member.workspace)
+  members: WorkspaceMember[];
 }

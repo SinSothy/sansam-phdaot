@@ -21,7 +21,7 @@ const initialTasks: Task[] = [
     source: "manual",
     tags: ["bug"],
     deadline: "2026-03-20T17:00:00Z", // Yesterday - Overdue / Carry-over
-    createdAt: new Date().toISOString(),
+    createdAt: "2026-03-21T10:00:00Z",
   },
   {
     id: "2",
@@ -32,7 +32,7 @@ const initialTasks: Task[] = [
     source: "meeting",
     tags: ["project"],
     deadline: "2026-03-21T16:00:00Z", // Today - Due soon
-    createdAt: new Date().toISOString(),
+    createdAt: "2026-03-21T10:10:00Z",
   },
   {
     id: "3",
@@ -43,7 +43,7 @@ const initialTasks: Task[] = [
     source: "manual",
     tags: ["chore"],
     deadline: "2026-03-25T12:00:00Z", // Future
-    createdAt: new Date().toISOString(),
+    createdAt: "2026-03-21T10:15:00Z",
   },
 ];
 

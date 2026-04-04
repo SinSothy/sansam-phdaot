@@ -1,16 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/ui/IconButton";
 import { Typography } from "@/components/ui/Typography";
+import { boardManager } from "@/api/managers/board.manager";
+import { useWorkspaceStore } from "@/api/store/useWorkspaceStore";
+import { useBoardStore } from "@/api/store/useBoardStore";
+import { BoardVisibility } from "@/api/types";
 
 interface CreateBoardDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (boardData: BoardData) => void;
+  onCreate?: (boardData: BoardData) => void;
 }
 
 export interface BoardData {
@@ -25,22 +29,18 @@ const BACKGROUND_PHOTOS = [
   {
     id: "mountain",
     url: "https://lh3.googleusercontent.com/aida-public/AB6AXuA6bmxQPy5swyTvQBfS0YPQx7taaRWfC6NRiD1jLp5sim_IF8rPNPoLsIvZHkSP8vw-k0SkpzjD1Af9nVnxKLPMKx5Jq91WA-ysefd0ryfnqjtn6Wc3wPbq8xGgM-rmPvnQT6U1jIhLIJaqKu-Gf-SrDOQXgBhqWbN4WyO9w8L3fXR3NWCPpBQQFhr_RWfghOdS5kHAktuxH0cLUE6sjYDx7s8avhIA-XVxHgtsbQV9CH_jr9ArC5DIb05AoxIFaVfZN3mpPtHW",
-    alt: "Mountain peaks under blue sky",
   },
   {
     id: "forest",
     url: "https://lh3.googleusercontent.com/aida-public/AB6AXuB8qtymcmw30BEF7bc86ew_0Bja40iTs5RgFA0QsfCUCwQEn_IieDWAXlQAoZ2e93Kg0or1MOXpPoktAyY716dVTp40A0xjp8oMDRDveUno__RtCtF3XuscLJKwAu5ZBMw4-906v7crcBzz9zhylyyJmUsiVyIf2xrw-OJRGAdkcBHt1Qarydm2K402pY3R7IgBb_gDBbMcyJ7q_fT3QN9MFJ-xyaBBYGKtMObRJ18-Ri6LDdBS5-BkHkixpipM-wPTy3jGtsbd",
-    alt: "Lush green forest floor",
   },
   {
     id: "fog",
     url: "https://lh3.googleusercontent.com/aida-public/AB6AXuC4HRSzFxNY43TY9SeSdGhYueeVVkTVCYpVrjaEGZ_vyxQfYU7n7DOJheBvP796UHl8hZZY4nFDAgpGXbTFjeQ9ZlRvkDTBTTMNywN-w9lWg_CPOvs1c4fzRXxjrtmXvbt_owvQmPI-3cfLtzfMIub3GzTfeVxhE__O3T3hp8CQJQJJQcw4mdgv5fWMsyFVQp-VzzCJ4eMJ1IEhfBDIDKPjMQRokXbOCAjYcOJ2G-_F878r_OM0A5r3Slg-JjMuBqLBd7IaLxQp",
-    alt: "Ethereal misty pine forest",
   },
   {
     id: "redwood",
     url: "https://lh3.googleusercontent.com/aida-public/AB6AXuB_piGRte1f2MpSSkTX-X7jC4B98XfEeP3ALEUaSiaRn_-AYPOVgbmJB75p2VI6f0G7lB_o-VmDPodXz1vplGNp8s2mWjwAbb0cflEMgd8DdakVO16h3Lqqv-FJNl_dxDPf6P-juroDoJyAiyRfn1COsz5jxKI8Pfd2iILmtQiiFfj-ihrq3YvPL-wPHoS8aSxlYDatCfpGclEiFOFZtE-IlVWNFXS5duMg7-fPm0NEwPsXc2ThJV2XeEl9lTTCtlAOL_YkfswX",
-    alt: "Sunlight through redwood trees",
   },
 ];
 
@@ -55,39 +55,70 @@ const COLORS = [
 
 export function CreateBoardDialog({ isOpen, onClose, onCreate }: CreateBoardDialogProps) {
   const t = useTranslations("Dashboard");
+  const { workspaces, isLoadingWorkspaces } = useWorkspaceStore();
+  const { isLoading: isCreatingBoard } = useBoardStore();
+  
   const [isMounted, setIsMounted] = useState(false);
   const [title, setTitle] = useState("");
-  const [workspace, setWorkspace] = useState("Engineering Team");
-  const [visibility, setVisibility] = useState<"workspace" | "private" | "public">("workspace");
+  const [workspaceId, setWorkspaceId] = useState("");
+  const [visibility, setVisibility] = useState<BoardVisibility>(BoardVisibility.WORKSPACE);
+  const boardTitleId = useId();
   const [background, setBackground] = useState(BACKGROUND_PHOTOS[0].url);
   const [isImage, setIsImage] = useState(true);
+
+  // Initialize workspaceId when workspaces are loaded
+  useEffect(() => {
+    if (workspaces.length > 0 && !workspaceId) {
+      setWorkspaceId(workspaces[0].id);
+    }
+  }, [workspaces, workspaceId]);
 
   useEffect(() => {
     setIsMounted(true);
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      // Fetch workspaces if they are not already loaded
+      if (workspaces.length === 0) {
+        boardManager.fetchWorkspaces();
+      }
     } else {
       document.body.style.overflow = "unset";
     }
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [isOpen, workspaces.length]);
 
   if (!isMounted) return null;
 
-  const handleCreate = () => {
-    if (!title.trim()) return;
-    onCreate({
-      title,
-      workspace,
-      visibility,
-      background,
-      isImage
-    });
-    // Reset form
-    setTitle("");
-    onClose();
+  const handleCreate = async () => {
+    if (!title.trim() || !workspaceId) return;
+
+    try {
+      const newBoard = await boardManager.createBoard({
+        name: title,
+        workspace_id: workspaceId,
+        visibility,
+        background,
+        is_image: isImage
+      });
+
+      if (onCreate) {
+        onCreate({
+          title,
+          workspace: workspaces.find(w => w.id === workspaceId)?.name || "",
+          visibility: visibility as any,
+          background,
+          isImage
+        });
+      }
+
+      // Reset form and close
+      setTitle("");
+      onClose();
+    } catch (error) {
+      console.error("Board creation failed:", error);
+    }
   };
 
   const content = (
@@ -163,11 +194,11 @@ export function CreateBoardDialog({ isOpen, onClose, onCreate }: CreateBoardDial
           <div className="flex-grow space-y-6">
             {/* Board Title Input */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-on-surface-variant ml-1" htmlFor="board-title">
+              <label className="block text-sm font-semibold text-on-surface-variant ml-1" htmlFor={boardTitleId}>
                 {t('boardTitle')}
               </label>
               <input
-                id="board-title"
+                id={boardTitleId}
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -181,13 +212,11 @@ export function CreateBoardDialog({ isOpen, onClose, onCreate }: CreateBoardDial
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-on-surface-variant ml-1">{t('workspaceLabel')}</label>
                 <CustomSelect
-                  value={workspace}
-                  onSelect={setWorkspace}
-                  options={[
-                    { label: t('designSystemTeam'), value: "Engineering Team" },
-                    { label: "Marketing Team", value: "Marketing Team" },
-                    { label: "Product Design", value: "Product Design" },
-                  ]}
+                  value={workspaceId}
+                  onSelect={setWorkspaceId}
+                  options={workspaces.map(w => ({ label: w.name, value: w.id }))}
+                  isLoading={isLoadingWorkspaces}
+                  placeholder={t('selectWorkspace')}
                 />
               </div>
               <div className="space-y-2">
@@ -196,9 +225,9 @@ export function CreateBoardDialog({ isOpen, onClose, onCreate }: CreateBoardDial
                   value={visibility}
                   onSelect={(v) => setVisibility(v as any)}
                   options={[
-                    { label: t('workspaceLabel'), value: "workspace", icon: "group" },
-                    { label: t('private'), value: "private", icon: "lock" },
-                    { label: t('public'), value: "public", icon: "public" },
+                    { label: t('workspaceLabel'), value: BoardVisibility.WORKSPACE, icon: "group" },
+                    { label: t('private'), value: BoardVisibility.PRIVATE, icon: "lock" },
+                    { label: t('public'), value: BoardVisibility.PUBLIC, icon: "public" },
                   ]}
                 />
               </div>
@@ -222,7 +251,7 @@ export function CreateBoardDialog({ isOpen, onClose, onCreate }: CreateBoardDial
                       background === photo.url && isImage ? "ring-2 ring-primary ring-offset-2 scale-95 shadow-md" : "hover:opacity-80"
                     )}
                   >
-                    <img src={photo.url} alt={photo.alt} className="w-full h-full object-cover" />
+                    <img src={photo.url} alt={t(`photoAlt.${photo.id}`)} className="w-full h-full object-cover" />
                     {background === photo.url && isImage && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                         <span className="material-symbols-outlined text-white text-lg">check</span>
@@ -256,9 +285,12 @@ export function CreateBoardDialog({ isOpen, onClose, onCreate }: CreateBoardDial
           <div className="mt-8 flex flex-col gap-3">
             <button 
               onClick={handleCreate}
-              disabled={!title.trim()}
-              className="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none"
+              disabled={!title.trim() || !workspaceId || isCreatingBoard}
+              className="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
             >
+              {isCreatingBoard && (
+                <span className="w-5 h-5 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin" />
+              )}
               {t('createBoardBtn')}
             </button>
             <button 
@@ -280,9 +312,12 @@ interface CustomSelectProps {
   value: string;
   onSelect: (value: string) => void;
   options: { label: string; value: string; icon?: string }[];
+  isLoading?: boolean;
+  placeholder?: string;
 }
 
-function CustomSelect({ value, onSelect, options }: CustomSelectProps) {
+function CustomSelect({ value, onSelect, options, isLoading, placeholder }: CustomSelectProps) {
+  const t = useTranslations("Common");
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = options.find((opt) => opt.value === value) || options[0];
 
@@ -297,19 +332,23 @@ function CustomSelect({ value, onSelect, options }: CustomSelectProps) {
         )}
       >
         <div className="flex items-center gap-2">
-          {selectedOption.icon && (
+          {selectedOption?.icon && (
             <span className="material-symbols-outlined text-secondary text-lg">
               {selectedOption.icon}
             </span>
           )}
-          <span>{selectedOption.label}</span>
+          <span>{isLoading ? (placeholder || t('loading')) : (selectedOption?.label || placeholder || t('select'))}</span>
         </div>
-        <span className={cn(
-          "material-symbols-outlined text-secondary transition-transform duration-200",
-          isOpen && "rotate-180"
-        )}>
-          expand_more
-        </span>
+        {isLoading ? (
+           <span className="w-4 h-4 border-2 border-secondary/20 border-t-secondary rounded-full animate-spin" />
+        ) : (
+          <span className={cn(
+            "material-symbols-outlined text-secondary transition-transform duration-200",
+            isOpen && "rotate-180"
+          )}>
+            expand_more
+          </span>
+        )}
       </button>
 
       {isOpen && (

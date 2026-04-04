@@ -35,14 +35,15 @@ export default async function LocaleLayout(props: {
   setRequestLocale(locale);
 
   const messages = await getMessages();
+  const now = new Date();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.variable} ${jakarta.variable} bg-background font-body text-on-background selection:bg-primary-container selection:text-on-primary-container antialiased`}>
-        <NextIntlClientProvider messages={messages} locale={locale}>
+        <NextIntlClientProvider messages={messages} locale={locale} timeZone="Asia/Phnom_Penh" now={now}>
           <Toaster position="top-right" richColors closeButton />
           <AdminLayout>{props.children}</AdminLayout>
         </NextIntlClientProvider>

@@ -11,7 +11,8 @@
     "add": "Add",
     "remove": "Remove",
     "leave": "Leave",
-    "boards": "Boards"
+    "boards": "Boards",
+    "select": "Select..."
   },
   "Errors": {
     "unexpected": "An unexpected error occurred. Please try again.",
@@ -89,6 +90,13 @@
     "background": "Background",
     "browseAll": "Browse All",
     "backgroundNote": "Boards with backgrounds help your team identify projects faster.",
+    "selectWorkspace": "Select Workspace",
+    "photoAlt": {
+      "mountain": "Mountain peaks under blue sky",
+      "forest": "Lush green forest floor",
+      "fog": "Ethereal misty pine forest",
+      "redwood": "Sunlight through redwood trees"
+    },
     "createBoardBtn": "Create Board",
     "cancel": "Cancel"
   },

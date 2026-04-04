@@ -3,19 +3,28 @@ import { toast } from "sonner";
 import { ApiResponse } from "./types";
 
 // Dynamic import of messages based on locale (client-side helper)
-const getLocalizedMessage = (key: string, locale: string = "en", params?: Record<string, any>) => {
-  // Simple fallback mechanism for non-component files
-  // In a real-world scenario, you might want to use a more robust singleton or provider
+const getLocalizedMessage = (
+  key: string,
+  locale: string = "en",
+  params?: Record<string, any>,
+) => {
   try {
-    const messages = require(`../../messages/${locale}.json`);
-    let message = key.split('.').reduce((obj, i) => obj[i], messages);
-    
+    let messages;
+    try {
+      messages = require(`../../messages/${locale}.json`);
+    } catch {
+      messages = require(`../../messages/en.json`);
+    }
+
+    let message = key.split(".").reduce((obj, i) => obj?.[i], messages);
+    if (typeof message !== "string") return key;
+
     if (params) {
       Object.entries(params).forEach(([k, v]) => {
-        message = message.replace(`{${k}}`, v);
+        message = (message as string).replace(`{${k}}`, String(v));
       });
     }
-    return message || key;
+    return message;
   } catch (e) {
     return key;
   }
@@ -26,8 +35,12 @@ const getLocalizedMessage = (key: string, locale: string = "en", params?: Record
  * Parses API errors and displays professional localized toast notifications.
  */
 export const handleApiError = (error: any) => {
-  const locale = typeof document !== "undefined" ? document.documentElement.lang || "en" : "en";
-  
+  const locale =
+    typeof document !== "undefined"
+      ? document.documentElement.lang || "en"
+      : "en";
+  console.log("handleApiError", error);
+
   let messageKey = "Errors.unexpected";
   let status = 500;
 
@@ -41,11 +54,14 @@ export const handleApiError = (error: any) => {
       // For now, keep it as is, or you can map common backend messages to keys
       const message = apiResponse.message;
       toast.error(message, {
-        description: status !== 500 ? getLocalizedMessage("Errors.errorCode", locale, { code: status }) : undefined,
+        description:
+          status !== 500
+            ? getLocalizedMessage("Errors.errorCode", locale, { code: status })
+            : undefined,
       });
       return { message, status, originalError: error };
-    } 
-    
+    }
+
     // 2. Handle specific HTTP status codes
     if (status === 401) {
       messageKey = "Errors.sessionExpired";
@@ -66,7 +82,10 @@ export const handleApiError = (error: any) => {
 
   // Display professional toast notification
   toast.error(localizedMessage, {
-    description: status !== 500 ? getLocalizedMessage("Errors.errorCode", locale, { code: status }) : undefined,
+    description:
+      status !== 500
+        ? getLocalizedMessage("Errors.errorCode", locale, { code: status })
+        : undefined,
   });
 
   // Log error for internal tracking

@@ -27,17 +27,18 @@ export class TransformInterceptor<T>
     next: CallHandler,
   ): Observable<Response<T>> {
     const request = context.switchToHttp().getRequest();
-    const requestID = request.body?.header?.requestID;
+    // Safely extract requestID from either body or query
+    const requestID = request.body?.header?.requestID || request.query?.requestID;
 
     return next.handle().pipe(
       map((data) => ({
         status: 'success',
         message: 'Operation successful',
         error: null,
-        data,
+        data: data ?? null,
         meta: {
           timestamp: new Date().toISOString(),
-          requestID,
+          requestID: requestID ? String(requestID) : undefined,
         },
       })),
     );

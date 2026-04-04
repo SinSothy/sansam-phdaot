@@ -63,7 +63,11 @@ export function CalendarSidebar({ selectedDate, onSelectDate }: CalendarSidebarP
     setCurrentViewDate(new Date(parseInt(e.target.value), month, 1));
   };
 
-  const todayStr = new Date().toDateString();
+  const [todayStr, setTodayStr] = useState<string>('');
+
+  useEffect(() => {
+    setTodayStr(new Date().toDateString());
+  }, []);
 
   return (
     <aside className="w-24 bg-surface-container-low border-r border-transparent flex flex-col h-full shrink-0">

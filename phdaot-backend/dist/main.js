@@ -8,11 +8,21 @@ const transform_interceptor_1 = require("./common/interceptors/transform.interce
 const global_exception_filter_1 = require("./common/filters/global-exception.filter");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const port = process.env.PORT || 3001;
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000').split(',');
+    const apiPrefix = 'api';
+    try {
+        const helmet = require('helmet');
+        app.use(helmet());
+    }
+    catch (e) {
+        console.warn('[Security Warning]: Helmet not found. Consider running "npm install helmet".');
+    }
     app.enableCors({
-        origin: '*',
+        origin: allowedOrigins,
         credentials: true,
     });
-    app.setGlobalPrefix('api');
+    app.setGlobalPrefix(apiPrefix);
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         transform: true,
@@ -27,10 +37,10 @@ async function bootstrap() {
         .addBearerAuth()
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
-    swagger_1.SwaggerModule.setup('api/docs', app, document);
-    await app.listen(3001);
-    console.log(`Application is running on: http://localhost:3001/api`);
-    console.log(`Swagger documentation: http://localhost:3001/api/docs`);
+    swagger_1.SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
+    await app.listen(port);
+    console.log(`Application is running on: http://localhost:${port}/${apiPrefix}`);
+    console.log(`Swagger documentation: http://localhost:${port}/${apiPrefix}/docs`);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

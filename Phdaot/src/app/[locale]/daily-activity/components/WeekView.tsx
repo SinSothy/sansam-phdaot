@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
 
 export interface EventItem {
   id: string;
@@ -19,8 +19,9 @@ interface WeekViewProps {
   onEventUpdate?: (task: EventItem) => void;
 }
 
-export default function WeekView({ currentDate = new Date(), events = [], onDayClick, onTaskClick, onEventUpdate }: WeekViewProps) {
+export default function WeekView({ currentDate = new Date("2024-10-01T00:00:00"), events = [], onDayClick, onTaskClick, onEventUpdate }: WeekViewProps) {
   const t = useTranslations('Calendar');
+  const format = useFormatter();
   
   // Generate days based on currentDate
   const startOfWeek = new Date(currentDate);
@@ -275,7 +276,7 @@ export default function WeekView({ currentDate = new Date(), events = [], onDayC
                           >
                             <h4 className="text-[11px] font-bold leading-tight select-none pointer-events-none">{event.title}</h4>
                             <p className="text-[10px] opacity-90 truncate mt-0.5 select-none pointer-events-none">
-                              {event.startTime ? new Date(event.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                              {event.startTime ? format.dateTime(new Date(event.startTime), {hour: '2-digit', minute:'2-digit'}) : ''}
                             </p>
                             
                             {/* Resize Handle */}
