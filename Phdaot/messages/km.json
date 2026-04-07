@@ -46,9 +46,12 @@
     "theme": "រចនាប័ទ្ម",
     "privacy": "ឯកជនភាព",
     "profile": "ប្រវត្តិរូប",
-    "manageProfile": "គ្រប់គ្រងប្រវត្តិរូប",
+    "manageProfile": "គ្រប់គ្រងប្រវត្តរូប",
     "workspaces": "កន្លែងធ្វើការ",
-    "logout": "ចាកចេញ"
+    "logout": "ចាកចេញ",
+    "create": "បង្កើត",
+    "createWorkspace": "បង្កើតកន្លែងធ្វើការ",
+    "createBoard": "បង្កើតក្តារការងារ"
   },
   "Dashboard": {
     "kanbanClarity": "Kanban Clarity",
@@ -98,7 +101,47 @@
       "redwood": "ពន្លឺថ្ងៃចាំងតាមដើមឈើក្រហម"
     },
     "createBoardBtn": "បង្កើតក្តារការងារ",
-    "cancel": "បោះបង់"
+    "cancel": "បោះបង់",
+    "emptyState": {
+      "title": "ចាប់ផ្តើមការបង្កើត <br/><span class=\"text-primary italic\">ស្នាដៃឯក (Masterpiece)</span> របស់អ្នក។",
+      "description": "កន្លែងធ្វើការគឺជាកន្លែងដែលក្រុមរបស់អ្នកគ្រប់គ្រងគម្រោង។ បង្កើតវាមួយដើម្បីចាប់ផ្តើមបង្កើតក្តារការងារដំបូងរបស់អ្នក។",
+      "createButton": "បង្កើតកន្លែងធ្វើការដំបូងរបស់អ្នក",
+      "viewTutorial": "មើលការណែនាំ (Tutorial)",
+      "features": {
+        "agile": {
+          "title": "ក្តារការងារដែលរហ័សរហួន (Agile Boards)",
+          "description": "ទិដ្ឋភាព Kanban, Scrum និង បញ្ជីការងារផ្សេងៗ។"
+        },
+        "synergy": {
+          "title": "កិច្ចសហការជាក្រុម (Team Synergy)",
+          "description": "សហការគ្នាក្នុងពេលជាក់ស្តែងនៅជុំវិញពិភពលោក។"
+        },
+        "analytics": {
+          "title": "ការវិភាគឆ្លាតវៃ (Smart Analytics)",
+          "description": "តាមដានល្បឿន និងសុខភាពរបស់គម្រោង។"
+        }
+      }
+    },
+    "createWorkspace": {
+      "title": "កន្លែងធ្វើការថ្មី",
+      "subtitle": "រចនាអនាគតនៃលំហូរការងាររបស់ក្រុមអ្នក",
+      "nameLabel": "ឈ្មោះកន្លែងធ្វើការ",
+      "namePlaceholder": "ឧទាហរណ៍៖ ក្រុមទីផ្សារ",
+      "typeLabel": "ប្រភេទកន្លែងធ្វើការ",
+      "types": {
+        "marketing": "ទីផ្សារ (Marketing)",
+        "engineering": "វិស្វកម្ម (Engineering)",
+        "sales": "ផ្នែកលក់ (Sales)",
+        "design": "ការរចនា (Design)",
+        "operations": "ប្រតិបត្តិការ (Operations)"
+      },
+      "descriptionLabel": "ការពិពណ៌នា",
+      "optional": "ស្រេចចិត្ត",
+      "descriptionPlaceholder": "តើកន្លែងធ្វើការនេះសម្រាប់អ្វី?",
+      "inviteNote": "អ្នកអាចអញ្ជើញសមាជិកក្រុមរបស់អ្នកបន្ទាប់ពីបង្កើតកន្លែងធ្វើការ។",
+      "cancel": "បោះបង់",
+      "submit": "បង្កើតកន្លែងធ្វើការ"
+    }
   },
   "Analytics": {
     "pageTitle": "ទិដ្ឋភាពទូទៅនៃការវិភាគ",

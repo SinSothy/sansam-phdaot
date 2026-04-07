@@ -1,49 +1,44 @@
-import apiClient from "../client";
+import { apiCore } from "../core";
 import { CreateBoardDto, Board } from "../types";
 
 /**
  * Board API Service
- * Handles communication with the /boards endpoint.
- * Note: apiClient automatically wraps the payload in { header, body } for POST requests.
+ * Handles communication with the /boards endpoint using the typed core.
+ * apiCore.post automatically wraps the payload in { header, body } and unwraps the response.
  */
 export const boardService = {
   /**
    * Create a new board.
    */
   async createBoard(boardData: CreateBoardDto): Promise<Board> {
-    const response = await apiClient.post("/boards/create", boardData);
-    // apiClient unwraps the ApiResponse, so response is the data field (Board)
-    return response as unknown as Board;
+    return apiCore.post<CreateBoardDto, Board>("/boards/create", boardData);
   },
 
   /**
    * List boards for a specific workspace.
    */
   async listBoards(workspaceId: string): Promise<Board[]> {
-    const response = await apiClient.post("/boards/list", { workspace_id: workspaceId });
-    return response as unknown as Board[];
+    return apiCore.post<{ workspace_id: string }, Board[]>("/boards/list", { workspace_id: workspaceId });
   },
 
   /**
    * Get a board by ID.
    */
   async getBoard(id: string): Promise<Board> {
-    const response = await apiClient.post("/boards/get", { id });
-    return response as unknown as Board;
+    return apiCore.post<{ id: string }, Board>("/boards/get", { id });
   },
 
   /**
    * Update a board.
    */
   async updateBoard(id: string, updates: Partial<CreateBoardDto>): Promise<Board> {
-    const response = await apiClient.post("/boards/update", { id, ...updates });
-    return response as unknown as Board;
+    return apiCore.post<{ id: string } & Partial<CreateBoardDto>, Board>("/boards/update", { id, ...updates });
   },
 
   /**
    * Delete a board.
    */
   async deleteBoard(id: string): Promise<void> {
-    await apiClient.post("/boards/delete", { id });
+    await apiCore.post<{ id: string }, void>("/boards/delete", { id });
   },
 };

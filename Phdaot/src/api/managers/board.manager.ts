@@ -2,7 +2,7 @@ import { boardService } from "../services/board.service";
 import { workspaceService } from "../services/workspace.service";
 import { useBoardStore } from "../store/useBoardStore";
 import { useWorkspaceStore } from "../store/useWorkspaceStore";
-import { CreateBoardDto } from "../types";
+import { CreateBoardDto, CreateWorkspaceRequest } from "../types";
 import { toast } from "sonner";
 
 /**
@@ -49,17 +49,44 @@ export const boardManager = {
   },
 
   /**
-   * Fetch workspaces and update store.
+   * Fetch dashboard data (workspaces + boards).
+   * Refactored to a single unified call for performance (Senior recommendation).
    */
-  async fetchWorkspaces() {
+  async fetchDashboardData() {
     const { setLoadingWorkspaces, setWorkspaces, setWorkspaceError } = useWorkspaceStore.getState();
     setLoadingWorkspaces(true);
     try {
+      // Assuming the backend workspace API is optimized to return nested boards.
       const workspaces = await workspaceService.listWorkspaces();
       setWorkspaces(workspaces);
       return workspaces;
     } catch (error: any) {
-      setWorkspaceError(error.message || "Failed to fetch workspaces");
+      setWorkspaceError(error.message || "Failed to fetch dashboard data");
+      throw error;
+    } finally {
+      setLoadingWorkspaces(false);
+    }
+  },
+
+  /**
+   * Fetch workspaces (legacy/standalone).
+   */
+  async fetchWorkspaces() {
+    return this.fetchDashboardData();
+  },
+  /**
+   * Create a new workspace and update store.
+   */
+  async createWorkspace(workspaceData: CreateWorkspaceRequest) {
+    const { setLoadingWorkspaces, addWorkspace, setWorkspaceError } = useWorkspaceStore.getState();
+    setLoadingWorkspaces(true);
+    try {
+      const newWorkspace = await workspaceService.createWorkspace(workspaceData);
+      addWorkspace(newWorkspace);
+      toast.success("Workspace created successfully");
+      return newWorkspace;
+    } catch (error: any) {
+      setWorkspaceError(error.message || "Failed to create workspace");
       throw error;
     } finally {
       setLoadingWorkspaces(false);

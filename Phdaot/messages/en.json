@@ -48,7 +48,10 @@
     "profile": "Profile",
     "manageProfile": "Manage Profile",
     "workspaces": "Workspaces",
-    "logout": "Log out"
+    "logout": "Log out",
+    "create": "Create",
+    "createWorkspace": "Create Workspace",
+    "createBoard": "Create Board"
   },
   "Dashboard": {
     "kanbanClarity": "Kanban Clarity",
@@ -98,7 +101,47 @@
       "redwood": "Sunlight through redwood trees"
     },
     "createBoardBtn": "Create Board",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "emptyState": {
+      "title": "Start your creative <br/><span class=\"text-primary italic\">masterpiece</span>.",
+      "description": "Workspaces are where your team manages projects. Create one to start building your first board.",
+      "createButton": "Create Your First Workspace",
+      "viewTutorial": "View Tutorial",
+      "features": {
+        "agile": {
+          "title": "Agile Boards",
+          "description": "Visual kanban, scrum, and list views."
+        },
+        "synergy": {
+          "title": "Team Synergy",
+          "description": "Collaborate in real-time across the globe."
+        },
+        "analytics": {
+          "title": "Smart Analytics",
+          "description": "Track velocity and project health."
+        }
+      }
+    },
+    "createWorkspace": {
+      "title": "New Workspace",
+      "subtitle": "Design the future of your team's workflow",
+      "nameLabel": "Workspace Name",
+      "namePlaceholder": "e.g., Marketing Team",
+      "typeLabel": "Workspace Type",
+      "types": {
+        "marketing": "Marketing",
+        "engineering": "Engineering",
+        "sales": "Sales",
+        "design": "Design",
+        "operations": "Operations"
+      },
+      "descriptionLabel": "Description",
+      "optional": "Optional",
+      "descriptionPlaceholder": "What is this workspace for?",
+      "inviteNote": "You can invite your team members after creating the workspace.",
+      "cancel": "Cancel",
+      "submit": "Create Workspace"
+    }
   },
   "Analytics": {
     "pageTitle": "Analytics Overview",

@@ -4,9 +4,9 @@
  */
 
 export enum Platform {
-  ANDROID = 'android',
-  IOS = 'ios',
-  WEB = 'web',
+  ANDROID = "android",
+  IOS = "ios",
+  WEB = "web",
 }
 
 export interface RequestHeader {
@@ -23,7 +23,7 @@ export interface BaseRequest<T> {
 }
 
 export interface ApiResponse<T> {
-  status: 'success' | 'error';
+  status: "success" | "error";
   message: string;
   error: any | null;
   data: T;
@@ -38,15 +38,15 @@ export interface ApiResponse<T> {
  */
 
 export enum BoardVisibility {
-  WORKSPACE = 'workspace',
-  PRIVATE = 'private',
-  PUBLIC = 'public',
+  WORKSPACE = "workspace",
+  PRIVATE = "private",
+  PUBLIC = "public",
 }
 
 export enum BoardStatus {
-  ACTIVE = 'active',
-  UPDATING = 'updating',
-  ARCHIVED = 'archived',
+  ACTIVE = "active",
+  UPDATING = "updating",
+  ARCHIVED = "archived",
 }
 
 export interface Workspace {
@@ -75,6 +75,7 @@ export interface CreateWorkspaceRequest {
   description?: string;
   slug?: string;
   logo_url?: string;
+  userID: string;
 }
 
 export interface UpdateWorkspaceRequest extends Partial<CreateWorkspaceRequest> {

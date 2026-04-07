@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { useUIStore } from "@/api/store/useUIStore";
 
-type MenuState = 'notifications' | 'help' | 'settings' | 'profile' | 'language' | null;
+type MenuState = 'notifications' | 'help' | 'settings' | 'profile' | 'language' | 'create' | null;
 
 const mockNotifications = [
   { id: 1, title: 'Mentioned you in a comment', project: 'API Gateway', time: '10m ago', unread: true },
@@ -18,6 +19,7 @@ export function Header() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const { openCreateBoard, openCreateWorkspace } = useUIStore();
   
   const [activeMenu, setActiveMenu] = useState<MenuState>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -52,15 +54,64 @@ export function Header() {
         </Link>
       </div>
 
-      {/* Center: Search */}
+      {/* Center: Search & Create */}
       <div className="flex-1 max-w-2xl mx-12 hidden md:block">
-        <div className="relative flex items-center w-full">
-          <span className="absolute left-3 text-slate-400 pointer-events-none material-symbols-outlined text-[20px]">search</span>
-          <input
-            type="text"
-            placeholder={t('searchPlaceholder')}
-            className="w-full h-10 pl-10 pr-4 bg-slate-50 border border-transparent hover:border-slate-200 focus:bg-white focus:border-primary rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-primary/10 placeholder:text-slate-400 transition-all font-medium text-slate-700"
-          />
+        <div className="relative flex items-center w-full gap-4">
+          <div className="relative flex-1">
+            <span className="absolute left-3 text-slate-400 pointer-events-none material-symbols-outlined text-[20px]">search</span>
+            <input
+              type="text"
+              placeholder={t('searchPlaceholder')}
+              className="w-full h-10 pl-10 pr-4 bg-slate-50 border border-transparent hover:border-slate-200 focus:bg-white focus:border-primary rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-primary/10 placeholder:text-slate-400 transition-all font-medium text-slate-700"
+            />
+          </div>
+
+          {/* Create Button with Dropdown - Senior UI Enhancement */}
+          <div className="relative">
+            <button 
+              onClick={() => toggleMenu('create')}
+              className={`flex items-center gap-2 px-4 h-10 rounded-xl bg-primary text-white font-bold text-xs transition-all hover:bg-primary/90 shadow-sm hover:shadow-md active:scale-95 ${activeMenu === 'create' ? 'ring-4 ring-primary/20' : ''}`}
+            >
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              {t('create')}
+            </button>
+            
+            {activeMenu === 'create' && (
+              <div className="absolute right-0 top-full mt-3 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.2)] border border-white/40 animate-in fade-in slide-in-from-top-2 duration-300 z-50 overflow-hidden">
+                <div className="p-2.5 space-y-1.5">
+                  <header className="px-3 py-2">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-0.5">Quick Actions</p>
+                  </header>
+                  
+                  <button 
+                    onClick={() => { openCreateWorkspace(); setActiveMenu(null); }}
+                    className="w-full flex items-center gap-4 px-3 py-3 text-sm font-bold text-slate-700 hover:bg-primary/10 hover:text-primary rounded-xl transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-orange-100/50 flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform shadow-sm">
+                      <span className="material-symbols-outlined text-[20px]">workspaces</span>
+                    </div>
+                    <div>
+                      <p className="leading-tight">{t('createWorkspace')}</p>
+                      <p className="text-[10px] font-medium text-slate-400 mt-1">Set up your collaborative space</p>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => { openCreateBoard(); setActiveMenu(null); }}
+                    className="w-full flex items-center gap-4 px-3 py-3 text-sm font-bold text-slate-700 hover:bg-primary/10 hover:text-primary rounded-xl transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-100/50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform shadow-sm">
+                      <span className="material-symbols-outlined text-[20px]">dashboard</span>
+                    </div>
+                    <div>
+                      <p className="leading-tight">{t('createBoard')}</p>
+                      <p className="text-[10px] font-medium text-slate-400 mt-1">Visualize your next project</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

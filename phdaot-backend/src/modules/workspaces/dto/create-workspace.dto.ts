@@ -1,23 +1,28 @@
-import { IsString, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsOptional, IsUrl } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateWorkspaceDto {
-  @ApiProperty({ example: 'My Awesome Workspace' })
+  @ApiProperty({ example: "d933b066-f00a-4402-a782-c731a481c823" })
+  @IsString()
+  @IsNotEmpty()
+  userID: string;
+
+  @ApiProperty({ example: "My Awesome Workspace" })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ example: 'This is my workspace description', required: false })
+  @ApiProperty({ example: "This is my workspace description", required: false })
   @IsString()
   @IsOptional()
   description?: string;
 
-  @ApiProperty({ example: 'my-awesome-workspace' })
+  @ApiProperty({ example: "my-awesome-workspace" })
   @IsString()
   @IsNotEmpty()
   slug: string;
 
-  @ApiProperty({ example: 'https://example.com/logo.png', required: false })
+  @ApiProperty({ example: "https://example.com/logo.png", required: false })
   @IsUrl()
   @IsOptional()
   logo_url?: string;

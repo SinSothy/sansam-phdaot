@@ -1,8 +1,9 @@
-import apiClient from "../client";
+import { apiCore } from "../core";
 
 /**
  * Enterprise Auth Service
- * Uses centralized apiClient with custom headers to communicate with the Auth API.
+ * Uses standardized apiCore to communicate with the Auth API.
+ * apiCore handles the { header, body } wrapping and error handling.
  */
 export const authService = {
   /**
@@ -10,8 +11,7 @@ export const authService = {
    * On success, the backend sets an HttpOnly cookie.
    */
   async login(credentials: { email: string; password: string }) {
-    const response = await apiClient.post("/auth/login", credentials);
-    return response.data;
+    return apiCore.post<{ email: string; password: string }, any>("/auth/login", credentials);
   },
 
   /**
@@ -19,22 +19,20 @@ export const authService = {
    * This is called automatically by the Axios interceptor on a 401 error.
    */
   async refreshToken() {
-    const response = await apiClient.post("/auth/refresh");
-    return response.data;
+    return apiCore.post<any, any>("/auth/refresh", {});
   },
 
   /**
    * Log the user out and clear the backend session/cookies.
    */
   async logout() {
-    await apiClient.post("/auth/logout");
+    await apiCore.post<any, void>("/auth/logout", {});
   },
 
   /**
    * Fetch the current authenticated user's profile.
    */
   async getCurrentUser() {
-    const response = await apiClient.get("/auth/me");
-    return response.data;
+    return apiCore.get<any>("/auth/me");
   },
 };

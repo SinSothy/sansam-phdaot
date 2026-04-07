@@ -12,6 +12,7 @@ interface WorkspaceState {
   setWorkspaces: (workspaces: Workspace[]) => void;
   setCurrentWorkspaceId: (id: string | null) => void;
   setLoadingWorkspaces: (isLoading: boolean) => void;
+  addWorkspace: (workspace: Workspace) => void;
   setWorkspaceError: (error: string | null) => void;
 }
 
@@ -29,6 +30,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       setWorkspaces: (workspaces: Workspace[]) => set({ workspaces }),
       setCurrentWorkspaceId: (id: string | null) => set({ currentWorkspaceId: id }),
       setLoadingWorkspaces: (isLoading: boolean) => set({ isLoadingWorkspaces: isLoading }),
+      addWorkspace: (workspace: Workspace) => set((state) => ({ workspaces: [...state.workspaces, workspace] })),
       setWorkspaceError: (error: string | null) => set({ workspaceError: error }),
     }),
     {

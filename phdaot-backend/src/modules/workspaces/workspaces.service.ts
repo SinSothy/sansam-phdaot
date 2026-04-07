@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Workspace } from './entities/workspace.entity';
 import { WorkspaceMember, Role } from './entities/workspace-member.entity';
+import { User } from '../users/entities/user.entity';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
 
@@ -13,29 +14,46 @@ export class WorkspacesService {
     private readonly workspaceRepository: Repository<Workspace>,
     @InjectRepository(WorkspaceMember)
     private readonly memberRepository: Repository<WorkspaceMember>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(userId: string, createWorkspaceDto: CreateWorkspaceDto): Promise<Workspace> {
-    const workspace = this.workspaceRepository.create(createWorkspaceDto);
-    const savedWorkspace = await this.workspaceRepository.save(workspace);
+    return this.dataSource.transaction(async (transactionalEntityManager) => {
+      // 1. Verify user exists
+      const user = await transactionalEntityManager.findOne(User, {
+        where: { id: userId },
+      });
 
-    // Add creator as OWNER
-    const member = this.memberRepository.create({
-      user_id: userId,
-      workspace_id: savedWorkspace.id,
-      role: Role.OWNER,
+      if (!user) {
+        throw new NotFoundException(`User with ID "${userId}" not found. Cannot create workspace.`);
+      }
+
+      // 2. Create and save workspace
+      const workspace = transactionalEntityManager.create(Workspace, createWorkspaceDto);
+      const savedWorkspace = await transactionalEntityManager.save(workspace);
+
+      // 3. Add creator as OWNER
+      const member = transactionalEntityManager.create(WorkspaceMember, {
+        user_id: userId,
+        workspace_id: savedWorkspace.id,
+        role: Role.OWNER,
+      });
+      await transactionalEntityManager.save(member);
+
+      return savedWorkspace;
     });
-    await this.memberRepository.save(member);
-
-    return savedWorkspace;
   }
 
   async findAll(userId: string): Promise<Workspace[]> {
-    // Bypassed for testing with Swagger
-    return this.workspaceRepository.find();
+    // Bypassed for testing with Swagger - added eager loading for boards
+    return this.workspaceRepository.find({
+      relations: ['boards'],
+      order: { created_at: 'DESC' }
+    });
     /*
     return this.workspaceRepository
       .createQueryBuilder('workspace')
+      .leftJoinAndSelect('workspace.boards', 'boards')
       .innerJoin('workspace_members', 'member', 'member.workspace_id = workspace.id')
       .where('member.user_id = :userId', { userId })
       .getMany();
@@ -43,11 +61,15 @@ export class WorkspacesService {
   }
 
   async findOne(id: string, userId: string): Promise<Workspace> {
-    // Bypassed for testing with Swagger
-    const workspace = await this.workspaceRepository.findOne({ where: { id } });
+    // Bypassed for testing with Swagger - added eager loading for boards
+    const workspace = await this.workspaceRepository.findOne({ 
+      where: { id },
+      relations: ['boards']
+    });
     /*
     const workspace = await this.workspaceRepository
       .createQueryBuilder('workspace')
+      .leftJoinAndSelect('workspace.boards', 'boards')
       .innerJoin('workspace_members', 'member', 'member.workspace_id = workspace.id')
       .where('workspace.id = :id', { id })
       .andWhere('member.user_id = :userId', { userId })

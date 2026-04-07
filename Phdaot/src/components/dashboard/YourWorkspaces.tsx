@@ -1,121 +1,125 @@
 'use client'
 
 import React, { useEffect } from "react";
-import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { CreateBoardDialog, BoardData } from "./CreateBoardDialog";
 import { boardManager } from "@/api/managers/board.manager";
 import { useWorkspaceStore } from "@/api/store/useWorkspaceStore";
+import { useUIStore } from "@/api/store/useUIStore";
 import { toast } from "sonner";
+import { EmptyWorkspace } from "./EmptyWorkspace";
+import { BoardCard } from "@/components/ui/BoardCard";
+import { BoardStatus } from "@/api/types";
+import { RecentlyViewed } from "./RecentlyViewed";
 
 export function YourWorkspaces() {
   const t = useTranslations('Dashboard');
   const { workspaces, isLoadingWorkspaces } = useWorkspaceStore();
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const { openCreateBoard, openCreateWorkspace } = useUIStore();
 
   useEffect(() => {
-    // Initial fetch of workspaces
-    if (workspaces.length === 0) {
-      boardManager.fetchWorkspaces();
-    }
-  }, [workspaces.length]);
+    // Initial fetch of workspaces with their boards (Senior optimization)
+    boardManager.fetchDashboardData();
+  }, []);
 
-  const handleCreateBoard = (data: BoardData) => {
-    // This is now mainly for UI notification as CreateBoardDialog handles the manager call
-    toast.success(t('newBoardInWorkspace', { workspace: data.workspace }), {
-      description: data.title,
-    });
+
+
+  if (isLoadingWorkspaces && workspaces.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <span className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (workspaces.length === 0) {
+    return (
+      <EmptyWorkspace onCreateClick={openCreateWorkspace} />
+    );
+  }
+
+  const getStatusColor = (status: BoardStatus) => {
+    switch (status) {
+      case BoardStatus.ACTIVE: return "bg-emerald-500";
+      case BoardStatus.UPDATING: return "bg-amber-500";
+      case BoardStatus.ARCHIVED: return "bg-slate-300";
+      default: return "bg-slate-300";
+    }
   };
 
+  // Senior Optimization: Filter all active boards across all workspaces for the summary section
+  const allActiveBoards = workspaces
+    .flatMap((workspace) => workspace.boards || [])
+    .filter((board) => board.status === BoardStatus.ACTIVE);
+
   return (
-    <section>
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-primary">workspaces</span>
-          <h3 className="text-lg font-bold font-headline uppercase">{t('yourWorkspaces')}</h3>
-        </div>
-      </div>
-
-      {/* Workspace Item: Design System Team */}
-      <div className="mb-10">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="h-10 w-10 rounded-lg bg-primary-fixed flex items-center justify-center text-primary font-bold">
-            DS
-          </div>
-          <div>
-            <h4 className="font-bold text-base">{t('designSystemTeam')}</h4>
-          </div>
-          <div className="flex items-center gap-2 ml-auto">
-            <button className="px-3 py-1.5 bg-surface-container-low text-xs font-semibold rounded-lg hover:bg-surface-container-high transition-all">{t('boards')}</button>
-            <button className="px-3 py-1.5 text-xs font-semibold rounded-lg hover:bg-surface-container-high transition-all">{t('membersCount', { count: 12 })}</button>
-            <button className="px-3 py-1.5 text-xs font-semibold rounded-lg hover:bg-surface-container-high transition-all">{t('settings')}</button>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+      <RecentlyViewed boards={allActiveBoards} />
+      
+      <section className="mt-12">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary">workspaces</span>
+            <h3 className="text-lg font-bold font-headline uppercase tracking-tight">{t('yourWorkspaces')}</h3>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 4 */}
-          <Link href="/planner" className="group relative h-40 rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest transition-all hover:shadow-2xl hover:-translate-y-1 block">
-            <div className="h-16 bg-gradient-to-r from-blue-400 to-indigo-400" />
-            <div className="p-4">
-              <p className="font-bold text-sm text-on-surface">{t('boardTitles.componentLibrary')}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-bold text-secondary uppercase tracking-tighter">{t('active')}</span>
+        {workspaces.map((workspace) => (
+          <div key={workspace.id} className="mb-12 last:mb-0">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-10 w-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary font-extrabold shadow-sm border border-primary/10">
+                {workspace.name.substring(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <h4 className="font-bold text-lg text-on-surface tracking-tight">{workspace.name}</h4>
+                <p className="text-xs text-secondary font-medium">{workspace.description || t('workspaceLabel')}</p>
+              </div>
+              <div className="flex items-center gap-2 ml-auto">
+                <button className="px-4 py-2 bg-surface-container-low text-xs font-bold rounded-xl hover:bg-surface-container-high transition-all text-secondary flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[16px]">dashboard</span>
+                  {t('boards')}
+                </button>
+                <button className="px-4 py-2 text-xs font-bold rounded-xl hover:bg-surface-container-high transition-all text-secondary flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[16px]">group</span>
+                  {t('membersCount', { count: 0 })}
+                </button>
+                <button className="px-4 py-2 text-xs font-bold rounded-xl hover:bg-surface-container-high transition-all text-secondary flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[16px]">settings</span>
+                  {t('settings')}
+                </button>
               </div>
             </div>
-          </Link>
-          {/* Card 5 */}
-          <Link href="/planner" className="group relative h-40 rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest transition-all hover:shadow-2xl hover:-translate-y-1 block">
-            <div className="h-16 bg-gradient-to-r from-orange-400 to-red-400" />
-            <div className="p-4">
-              <p className="font-bold text-sm text-on-surface">{t('boardTitles.docHub')}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span className="text-[10px] font-bold text-secondary uppercase tracking-tighter">{t('updating')}</span>
-              </div>
-            </div>
-          </Link>
-          {/* Card 6 */}
-          <Link href="/planner" className="group relative h-40 rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest transition-all hover:shadow-2xl hover:-translate-y-1 block">
-            <div className="h-16 bg-gradient-to-r from-purple-400 to-pink-400" />
-            <div className="p-4">
-              <p className="font-bold text-sm text-on-surface">{t('boardTitles.brandAssets')}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-bold text-secondary uppercase tracking-tighter">{t('active')}</span>
-              </div>
-            </div>
-          </Link>
-          {/* Card 7 */}
-          <Link href="/planner" className="group relative h-40 rounded-xl overflow-hidden cursor-pointer bg-surface-container-lowest transition-all hover:shadow-2xl hover:-translate-y-1 block">
-            <div className="h-16 bg-gradient-to-r from-slate-400 to-slate-500" />
-            <div className="p-4">
-              <p className="font-bold text-sm text-on-surface">{t('boardTitles.archive2023')}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-slate-300" />
-                <span className="text-[10px] font-bold text-secondary uppercase tracking-tighter">{t('archived')}</span>
-              </div>
-            </div>
-          </Link>
 
-          {/* Create New Board Card */}
-          <button
-            onClick={() => setIsDialogOpen(true)}
-            className="group relative h-40 rounded-xl border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-3 transition-all hover:border-primary hover:bg-primary/5 hover:shadow-xl active:scale-[0.98]"
-          >
-            <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-secondary group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-3xl">add</span>
-            </div>
-            <span className="font-bold text-sm text-secondary group-hover:text-primary transition-colors">{t('createNewBoard')}</span>
-          </button>
-        </div>
-      </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Render Actual Boards */}
+              {workspace.boards?.map((board) => (
+                <BoardCard
+                  key={board.id}
+                  title={board.name}
+                  gradientFrom="from-primary/40"
+                  gradientTo="to-secondary/40"
+                  imageUrl={board.is_image ? board.background : undefined}
+                  bgColor={!board.is_image ? board.background : undefined}
+                  statusColor={getStatusColor(board.status)}
+                  statusText={t(board.status.toLowerCase() as any)}
+                  href={`/planner/${board.id}`}
+                />
+              ))}
 
-      <CreateBoardDialog
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onCreate={handleCreateBoard}
-      />
-    </section>
+              {/* Create New Board Card */}
+              <button
+                onClick={openCreateBoard}
+                className="group relative h-40 rounded-xl border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-3 transition-all hover:border-primary hover:bg-primary/5 hover:shadow-xl active:scale-[0.98] bg-surface-container-lowest"
+              >
+                <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-secondary group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined text-3xl">add</span>
+                </div>
+                <span className="font-bold text-sm text-secondary group-hover:text-primary transition-colors">{t('createNewBoard')}</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </section>
+
+    </div>
   );
 }
