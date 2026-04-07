@@ -22,9 +22,23 @@ export const workspaceService = {
   },
 
   /**
-   * Get a workspace by ID.
+   * Update a workspace.
    */
-  async getWorkspace(id: string): Promise<Workspace> {
-    return apiCore.post<{ id: string }, Workspace>("/workspaces/get", { id });
+  async updateWorkspace(workspaceData: Partial<Workspace> & { id: string }): Promise<Workspace> {
+    return apiCore.post<Partial<Workspace> & { id: string }, Workspace>("/workspaces/update", workspaceData);
+  },
+
+  /**
+   * Delete a workspace.
+   */
+  async deleteWorkspace(id: string): Promise<void> {
+    await apiCore.post<{ id: string }, void>("/workspaces/delete", { id });
+  },
+
+  /**
+   * Get workspace members.
+   */
+  async getWorkspaceMembers(id: string): Promise<any[]> {
+    return apiCore.post<{ id: string }, any[]>("/workspaces/members", { id });
   },
 };

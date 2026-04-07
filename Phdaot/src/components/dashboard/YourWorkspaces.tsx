@@ -10,9 +10,11 @@ import { EmptyWorkspace } from "./EmptyWorkspace";
 import { BoardCard } from "@/components/ui/BoardCard";
 import { BoardStatus } from "@/api/types";
 import { RecentlyViewed } from "./RecentlyViewed";
+import { useRouter } from "@/i18n/navigation";
 
 export function YourWorkspaces() {
   const t = useTranslations('Dashboard');
+  const router = useRouter();
   const { workspaces, isLoadingWorkspaces } = useWorkspaceStore();
   const { openCreateBoard, openCreateWorkspace } = useUIStore();
 
@@ -82,7 +84,10 @@ export function YourWorkspaces() {
                   <span className="material-symbols-outlined text-[16px]">group</span>
                   {t('membersCount', { count: 0 })}
                 </button>
-                <button className="px-4 py-2 text-xs font-bold rounded-xl hover:bg-surface-container-high transition-all text-secondary flex items-center gap-2">
+                <button 
+                  onClick={() => router.push(`/workspaces/${workspace.id}/settings`)}
+                  className="px-4 py-2 text-xs font-bold rounded-xl hover:bg-surface-container-high transition-all text-secondary flex items-center gap-2"
+                >
                   <span className="material-symbols-outlined text-[16px]">settings</span>
                   {t('settings')}
                 </button>

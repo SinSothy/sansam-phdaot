@@ -305,6 +305,44 @@
     "confirmDelete": "Are you sure you want to permanently delete this workspace? This action cannot be undone.",
     "deleteSuccess": "Workspace deleted! (Mock action)"
   },
+  "WorkspaceSettings": {
+    "pageTitle": "Workspace Settings",
+    "pageSubtitle": "Manage your workspace settings, members, and boards.",
+    "tabs": {
+      "boards": "Boards",
+      "members": "Members",
+      "settings": "Settings"
+    },
+    "boards": {
+      "title": "Workspace Boards",
+      "description": "Total of {count} boards in this workspace."
+    },
+    "members": {
+      "title": "Workspace Members",
+      "description": "Manage who has access to this workspace.",
+      "invite": "Invite Member"
+    },
+    "general": {
+      "title": "General Settings",
+      "description": "Update your workspace identity and configuration.",
+      "name": "Workspace Name",
+      "namePlaceholder": "e.g. Design Team",
+      "type": "Workspace Type",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "What is this workspace for?",
+      "saveChanges": "Save Changes",
+      "saving": "Saving...",
+      "updateSuccess": "Workspace updated successfully!"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Permanently delete this workspace and all its data. This action cannot be undone.",
+      "deleteWorkspace": "Delete Workspace",
+      "confirmTitle": "Are you sure?",
+      "confirmDescription": "This will permanently delete the workspace and all associated boards. Please type \"DELETE\" to confirm.",
+      "deleteSuccess": "Workspace deleted successfully!"
+    }
+  },
   "Deadlines": {
     "title": "Deadlines Tracker",
     "placeholder": "Feature Placeholder: Calendar or list view highlighting critical and overdue tasks."
