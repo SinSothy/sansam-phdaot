@@ -12,6 +12,7 @@ export enum BoardStatus {
   ACTIVE = 'active',
   UPDATING = 'updating',
   ARCHIVED = 'archived',
+  DELETED = 'deleted',
 }
 
 @Entity('boards')
@@ -45,7 +46,7 @@ export class Board {
   })
   status: BoardStatus;
 
-  @ManyToOne(() => Workspace, (workspace) => workspace.boards)
+  @ManyToOne(() => Workspace, (workspace) => workspace.boards, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'workspace_id' })
   workspace: Workspace;
 

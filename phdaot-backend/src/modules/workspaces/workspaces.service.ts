@@ -1,11 +1,16 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { Workspace } from './entities/workspace.entity';
-import { WorkspaceMember, Role } from './entities/workspace-member.entity';
+import { Workspace, WorkspaceStatus } from './entities/workspace.entity';
+import { WorkspaceMember, Role, MembershipStatus } from './entities/workspace-member.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
+import { Board, BoardStatus } from '../boards/entities/board.entity';
+import { Task, TaskStatus } from '../tasks/entities/task.entity';
+import { Project, ProjectStatus } from '../projects/entities/project.entity';
+import { Note, NoteStatus } from '../notes/entities/note.entity';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class WorkspacesService {
@@ -47,6 +52,7 @@ export class WorkspacesService {
   async findAll(userId: string): Promise<Workspace[]> {
     // Bypassed for testing with Swagger - added eager loading for boards
     return this.workspaceRepository.find({
+      where: { status: Not(WorkspaceStatus.DELETED) },
       relations: ['boards'],
       order: { created_at: 'DESC' }
     });
@@ -63,7 +69,7 @@ export class WorkspacesService {
   async findOne(id: string, userId: string): Promise<Workspace> {
     // Bypassed for testing with Swagger - added eager loading for boards
     const workspace = await this.workspaceRepository.findOne({ 
-      where: { id },
+      where: { id, status: Not(WorkspaceStatus.DELETED) },
       relations: ['boards']
     });
     /*
@@ -110,10 +116,32 @@ export class WorkspacesService {
     }
     */
 
-    const result = await this.workspaceRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Workspace with ID "${id}" not found`);
-    }
+    await this.dataSource.transaction(async (manager) => {
+      // 1. Mark Workspace as DELETED
+      const workspace = await manager.findOne(Workspace, { where: { id } });
+      if (!workspace) throw new NotFoundException(`Workspace with ID "${id}" not found`);
+      
+      workspace.status = WorkspaceStatus.DELETED;
+      await manager.save(workspace);
+
+      // 2. Mark Members as DELETED
+      await manager.update(WorkspaceMember, { workspace_id: id }, { status: MembershipStatus.DELETED });
+
+      // 3. Mark Projects as DELETED
+      await manager.update(Project, { workspace_id: id }, { status: ProjectStatus.DELETED });
+
+      // 4. Mark Notes as DELETED
+      await manager.update(Note, { workspace_id: id }, { status: NoteStatus.DELETED });
+
+      // 5. Mark Boards and their Tasks as DELETED
+      const boards = await manager.find(Board, { where: { workspace_id: id } });
+      for (const board of boards) {
+        board.status = BoardStatus.DELETED;
+        await manager.save(board);
+        
+        await manager.update(Task, { board_id: board.id }, { status: TaskStatus.DELETED });
+      }
+    });
   }
 
   async getMembers(id: string, userId: string): Promise<WorkspaceMember[]> {

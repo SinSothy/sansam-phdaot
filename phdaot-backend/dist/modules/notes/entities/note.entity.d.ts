@@ -5,8 +5,13 @@ export interface NoteAttachment {
     type: string;
     name: string;
 }
+export declare enum NoteStatus {
+    ACTIVE = "ACTIVE",
+    DELETED = "DELETED"
+}
 export declare class Note {
     id: string;
+    status: NoteStatus;
     content: string;
     attachments: NoteAttachment[];
     author_id: string;

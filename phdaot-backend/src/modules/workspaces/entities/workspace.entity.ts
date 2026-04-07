@@ -2,6 +2,11 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } f
 import { Board } from '../../boards/entities/board.entity';
 import { WorkspaceMember } from './workspace-member.entity';
 
+export enum WorkspaceStatus {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+}
+
 @Entity('workspaces')
 export class Workspace {
   @PrimaryGeneratedColumn('uuid')
@@ -9,6 +14,13 @@ export class Workspace {
 
   @Column()
   name: string;
+
+  @Column({
+    type: 'enum',
+    enum: WorkspaceStatus,
+    default: WorkspaceStatus.ACTIVE,
+  })
+  status: WorkspaceStatus;
 
   @Column({ nullable: true })
   description: string;

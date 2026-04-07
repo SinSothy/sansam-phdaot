@@ -5,7 +5,8 @@ export declare enum TaskStatus {
     TODO = "TODO",
     IN_PROGRESS = "IN_PROGRESS",
     TESTING = "TESTING",
-    DONE = "DONE"
+    DONE = "DONE",
+    DELETED = "DELETED"
 }
 export declare class Task {
     id: string;

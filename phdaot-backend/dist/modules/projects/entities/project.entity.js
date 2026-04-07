@@ -9,9 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project = void 0;
+exports.Project = exports.ProjectStatus = void 0;
 const typeorm_1 = require("typeorm");
 const workspace_entity_1 = require("../../workspaces/entities/workspace.entity");
+var ProjectStatus;
+(function (ProjectStatus) {
+    ProjectStatus["ACTIVE"] = "ACTIVE";
+    ProjectStatus["DELETED"] = "DELETED";
+})(ProjectStatus || (exports.ProjectStatus = ProjectStatus = {}));
 let Project = class Project {
 };
 exports.Project = Project;
@@ -23,6 +28,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Project.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: ProjectStatus,
+        default: ProjectStatus.ACTIVE,
+    }),
+    __metadata("design:type", String)
+], Project.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.Column)('uuid'),
     __metadata("design:type", String)

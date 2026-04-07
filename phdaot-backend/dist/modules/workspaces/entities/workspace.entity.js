@@ -9,10 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Workspace = void 0;
+exports.Workspace = exports.WorkspaceStatus = void 0;
 const typeorm_1 = require("typeorm");
 const board_entity_1 = require("../../boards/entities/board.entity");
 const workspace_member_entity_1 = require("./workspace-member.entity");
+var WorkspaceStatus;
+(function (WorkspaceStatus) {
+    WorkspaceStatus["ACTIVE"] = "ACTIVE";
+    WorkspaceStatus["DELETED"] = "DELETED";
+})(WorkspaceStatus || (exports.WorkspaceStatus = WorkspaceStatus = {}));
 let Workspace = class Workspace {
 };
 exports.Workspace = Workspace;
@@ -24,6 +29,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Workspace.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: WorkspaceStatus,
+        default: WorkspaceStatus.ACTIVE,
+    }),
+    __metadata("design:type", String)
+], Workspace.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)

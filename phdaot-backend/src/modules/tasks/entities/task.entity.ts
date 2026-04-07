@@ -8,6 +8,7 @@ export enum TaskStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   TESTING = 'TESTING',
   DONE = 'DONE',
+  DELETED = 'DELETED',
 }
 
 @Entity('tasks')

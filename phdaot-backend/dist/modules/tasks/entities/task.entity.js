@@ -20,6 +20,7 @@ var TaskStatus;
     TaskStatus["IN_PROGRESS"] = "IN_PROGRESS";
     TaskStatus["TESTING"] = "TESTING";
     TaskStatus["DONE"] = "DONE";
+    TaskStatus["DELETED"] = "DELETED";
 })(TaskStatus || (exports.TaskStatus = TaskStatus = {}));
 let Task = class Task {
 };

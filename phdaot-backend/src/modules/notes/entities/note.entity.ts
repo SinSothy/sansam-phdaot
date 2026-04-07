@@ -8,10 +8,22 @@ export interface NoteAttachment {
   name: string;
 }
 
+export enum NoteStatus {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+}
+
 @Entity('notes')
 export class Note {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({
+    type: 'enum',
+    enum: NoteStatus,
+    default: NoteStatus.ACTIVE,
+  })
+  status: NoteStatus;
 
   @Column('text')
   content: string;

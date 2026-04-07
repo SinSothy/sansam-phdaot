@@ -9,6 +9,11 @@ export enum Role {
   OBSERVER = 'OBSERVER',
 }
 
+export enum MembershipStatus {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+}
+
 @Entity('workspace_members')
 export class WorkspaceMember {
   @PrimaryColumn('uuid')
@@ -17,11 +22,18 @@ export class WorkspaceMember {
   @PrimaryColumn('uuid')
   workspace_id: string;
 
+  @Column({
+    type: 'enum',
+    enum: MembershipStatus,
+    default: MembershipStatus.ACTIVE,
+  })
+  status: MembershipStatus;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Workspace)
+  @ManyToOne(() => Workspace, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'workspace_id' })
   workspace: Workspace;
 

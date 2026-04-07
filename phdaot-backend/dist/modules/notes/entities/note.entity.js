@@ -9,10 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Note = void 0;
+exports.Note = exports.NoteStatus = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../../users/entities/user.entity");
 const workspace_entity_1 = require("../../workspaces/entities/workspace.entity");
+var NoteStatus;
+(function (NoteStatus) {
+    NoteStatus["ACTIVE"] = "ACTIVE";
+    NoteStatus["DELETED"] = "DELETED";
+})(NoteStatus || (exports.NoteStatus = NoteStatus = {}));
 let Note = class Note {
 };
 exports.Note = Note;
@@ -20,6 +25,14 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], Note.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: NoteStatus,
+        default: NoteStatus.ACTIVE,
+    }),
+    __metadata("design:type", String)
+], Note.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.Column)('text'),
     __metadata("design:type", String)
