@@ -20,6 +20,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+import { SocketInitializer } from '@/components/providers/SocketInitializer'
+
 export default async function LocaleLayout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -45,6 +47,7 @@ export default async function LocaleLayout(props: {
       <body className={`${inter.variable} ${jakarta.variable} bg-background font-body text-on-background selection:bg-primary-container selection:text-on-primary-container antialiased`}>
         <NextIntlClientProvider messages={messages} locale={locale} timeZone="Asia/Phnom_Penh" now={now}>
           <Toaster position="top-right" richColors closeButton />
+          <SocketInitializer />
           <AdminLayout>{props.children}</AdminLayout>
         </NextIntlClientProvider>
       </body>

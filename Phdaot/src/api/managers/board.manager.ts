@@ -2,8 +2,9 @@ import { boardService } from "../services/board.service";
 import { workspaceService } from "../services/workspace.service";
 import { useBoardStore } from "../store/useBoardStore";
 import { useWorkspaceStore } from "../store/useWorkspaceStore";
-import { CreateBoardDto, CreateWorkspaceRequest } from "../types";
+import { CreateBoardDto, CreateWorkspaceRequest, Workspace } from "../types";
 import { toast } from "sonner";
+import { socketClient } from "../socket.client";
 
 /**
  * Board Manager Layer (Business Logic)
@@ -50,23 +51,75 @@ export const boardManager = {
 
   /**
    * Fetch dashboard data (workspaces + boards).
-   * Refactored to a single unified call for performance (Senior recommendation).
+   * Refactored to use WebSockets for high-performance initial loading.
+   * Senior Choice: Using Socket acknowledgment for request-response over persistent connection.
    */
   async fetchDashboardData() {
     const { setLoadingWorkspaces, setWorkspaces, setWorkspaceError } = useWorkspaceStore.getState();
     setLoadingWorkspaces(true);
     try {
-      // Assuming the backend workspace API is optimized to return nested boards.
-      const workspaces = await workspaceService.listWorkspaces();
-      setWorkspaces(workspaces);
-      return workspaces;
+      // @SeniorOptimization: Fetch via Socket.IO with acknowledgment
+      const response = await socketClient.emitAsync<Workspace[]>("list_workspaces", {});
+      
+      // The socketClient.emitAsync already handles the .data unwrapping if it's a standardized envelope
+      setWorkspaces(response);
+      
+      // @SeniorOptimization: Join all workspace rooms for real-time board updates
+      response.forEach(workspace => {
+        socketClient.socket?.emit("subscribe_workspace", { workspaceId: workspace.id });
+      });
+      
+      // Re-initialize listeners to ensure real-time updates are active
+      this.listenToDashboardUpdates();
+      
+      return response;
     } catch (error: any) {
-      setWorkspaceError(error.message || "Failed to fetch dashboard data");
+      setWorkspaceError(error.message || "Failed to fetch dashboard data via WebSocket");
       throw error;
     } finally {
       setLoadingWorkspaces(false);
     }
   },
+
+  /**
+   * Real-time listeners for dashboard updates.
+   * Ensures the store is reactive to workspace and board changes globally.
+   */
+  listenToDashboardUpdates() {
+    const socket = socketClient.socket;
+    if (!socket) return;
+
+    // Listen for workspace creations
+    socket.off("workspace:created").on("workspace:created", (workspace: Workspace) => {
+      const { addWorkspace } = useWorkspaceStore.getState();
+      addWorkspace(workspace);
+    });
+
+    // Listen for workspace updates/delections if needed
+    socket.off("workspace:updated").on("workspace:updated", (updatedWorkspace: Workspace) => {
+      const { workspaces, setWorkspaces } = useWorkspaceStore.getState();
+      const newWorkspaces = workspaces.map(w => 
+        w.id === updatedWorkspace.id ? { ...w, ...updatedWorkspace } : w
+      );
+      setWorkspaces(newWorkspaces);
+    });
+
+    // @SeniorOptimization: Handle board updates directly for the dashboard view
+    socket.off("board:created").on("board:created", (newBoard: any) => {
+      const { workspaces, setWorkspaces } = useWorkspaceStore.getState();
+      const newList = workspaces.map(w => {
+        if (w.id === newBoard.workspace_id) {
+          const boards = w.boards || [];
+          if (!boards.some(b => b.id === newBoard.id)) {
+            return { ...w, boards: [...boards, newBoard] };
+          }
+        }
+        return w;
+      });
+      setWorkspaces(newList);
+    });
+  },
+
 
   /**
    * Fetch workspaces (legacy/standalone).

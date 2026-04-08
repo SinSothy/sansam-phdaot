@@ -168,27 +168,6 @@ export function CreateWorkspaceDialog({ isOpen, onClose, onCreate }: CreateWorks
             </div>
           </div>
 
-          {/* Team Invitation Hint */}
-          <div className="bg-primary/5 p-4 rounded-2xl flex items-center gap-4 border border-primary/10">
-            <div className="flex -space-x-3">
-              {[1, 2].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center overflow-hidden">
-                  <img
-                    alt="User"
-                    className="w-full h-full object-cover"
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i === 1 ? 'Aria' : 'Leo'}`}
-                  />
-                </div>
-              ))}
-              <div className="w-10 h-10 rounded-full border-2 border-white bg-primary-fixed text-[11px] text-on-primary-fixed font-black flex items-center justify-center shadow-sm">
-                +12
-              </div>
-            </div>
-            <p className="text-[11px] font-bold text-on-surface/70 leading-tight">
-              {t('inviteNote')}
-            </p>
-          </div>
-
           {/* Standardized Footer Actions */}
           <div className="pt-4 flex flex-col gap-3">
             <button

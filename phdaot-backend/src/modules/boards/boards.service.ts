@@ -4,17 +4,25 @@ import { Repository } from 'typeorm';
 import { Board } from './entities/board.entity';
 import { CreateBoardDto, UpdateBoardDto } from './dto/board.dto';
 
+import { WorkspacesGateway } from '../workspaces/gateways/workspaces.gateway';
+
 @Injectable()
 export class BoardsService {
   constructor(
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
+    private readonly workspacesGateway: WorkspacesGateway,
   ) {}
 
   async create(userId: string, createBoardDto: CreateBoardDto): Promise<Board> {
     // TODO: Verify if user has access to the workspace
     const board = this.boardRepository.create(createBoardDto);
-    return this.boardRepository.save(board);
+    const savedBoard = await this.boardRepository.save(board);
+    
+    // @SeniorOptimization: Notify clients via WebSockets
+    this.workspacesGateway.emitBoardCreated(savedBoard);
+    
+    return savedBoard;
   }
 
   async findAll(workspaceId?: string): Promise<Board[]> {

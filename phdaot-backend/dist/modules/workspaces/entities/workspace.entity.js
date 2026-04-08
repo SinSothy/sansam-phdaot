@@ -42,7 +42,7 @@ __decorate([
     __metadata("design:type", String)
 ], Workspace.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Workspace.prototype, "slug", void 0);
 __decorate([
@@ -62,6 +62,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Workspace.prototype, "members", void 0);
 exports.Workspace = Workspace = __decorate([
-    (0, typeorm_1.Entity)('workspaces')
+    (0, typeorm_1.Entity)('workspaces'),
+    (0, typeorm_1.Index)(['slug'], { unique: true, where: "\"status\" != 'DELETED'" })
 ], Workspace);
 //# sourceMappingURL=workspace.entity.js.map

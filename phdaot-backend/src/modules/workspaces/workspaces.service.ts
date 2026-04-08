@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Workspace, WorkspaceStatus } from './entities/workspace.entity';
@@ -11,6 +11,7 @@ import { Task, TaskStatus } from '../tasks/entities/task.entity';
 import { Project, ProjectStatus } from '../projects/entities/project.entity';
 import { Note, NoteStatus } from '../notes/entities/note.entity';
 import { Not } from 'typeorm';
+import { WorkspacesGateway } from './gateways/workspaces.gateway';
 
 @Injectable()
 export class WorkspacesService {
@@ -20,6 +21,8 @@ export class WorkspacesService {
     @InjectRepository(WorkspaceMember)
     private readonly memberRepository: Repository<WorkspaceMember>,
     private readonly dataSource: DataSource,
+    @Inject(forwardRef(() => WorkspacesGateway))
+    private readonly workspacesGateway: WorkspacesGateway,
   ) {}
 
   async create(userId: string, createWorkspaceDto: CreateWorkspaceDto): Promise<Workspace> {
@@ -44,6 +47,9 @@ export class WorkspacesService {
         role: Role.OWNER,
       });
       await transactionalEntityManager.save(member);
+
+      // 4. Emit WebSocket event
+      this.workspacesGateway.emitWorkspaceCreated(userId, savedWorkspace);
 
       return savedWorkspace;
     });
@@ -102,7 +108,12 @@ export class WorkspacesService {
 
     const workspace = await this.findOne(id, userId);
     Object.assign(workspace, updateWorkspaceDto);
-    return this.workspaceRepository.save(workspace);
+    const updatedWorkspace = await this.workspaceRepository.save(workspace);
+    
+    // Emit WebSocket event
+    this.workspacesGateway.emitWorkspaceUpdated(id, updatedWorkspace);
+    
+    return updatedWorkspace;
   }
 
   async remove(id: string, userId: string): Promise<void> {
@@ -141,6 +152,9 @@ export class WorkspacesService {
         
         await manager.update(Task, { board_id: board.id }, { status: TaskStatus.DELETED });
       }
+
+      // 6. Emit WebSocket event
+      this.workspacesGateway.emitWorkspaceDeleted(id);
     });
   }
 

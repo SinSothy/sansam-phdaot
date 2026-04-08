@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, Index } from 'typeorm';
 import { Board } from '../../boards/entities/board.entity';
 import { WorkspaceMember } from './workspace-member.entity';
 
@@ -8,6 +8,7 @@ export enum WorkspaceStatus {
 }
 
 @Entity('workspaces')
+@Index(['slug'], { unique: true, where: "\"status\" != 'DELETED'" })
 export class Workspace {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -25,7 +26,7 @@ export class Workspace {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @Column({ nullable: true })

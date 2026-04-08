@@ -13,15 +13,16 @@ const workspace_entity_1 = require("./entities/workspace.entity");
 const workspace_member_entity_1 = require("./entities/workspace-member.entity");
 const workspaces_service_1 = require("./workspaces.service");
 const workspaces_controller_1 = require("./workspaces.controller");
+const workspaces_gateway_1 = require("./gateways/workspaces.gateway");
 let WorkspacesModule = class WorkspacesModule {
 };
 exports.WorkspacesModule = WorkspacesModule;
 exports.WorkspacesModule = WorkspacesModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([workspace_entity_1.Workspace, workspace_member_entity_1.WorkspaceMember])],
-        providers: [workspaces_service_1.WorkspacesService],
+        providers: [workspaces_service_1.WorkspacesService, workspaces_gateway_1.WorkspacesGateway],
         controllers: [workspaces_controller_1.WorkspacesController],
-        exports: [workspaces_service_1.WorkspacesService, typeorm_1.TypeOrmModule],
+        exports: [workspaces_service_1.WorkspacesService, workspaces_gateway_1.WorkspacesGateway, typeorm_1.TypeOrmModule],
     })
 ], WorkspacesModule);
 //# sourceMappingURL=workspaces.module.js.map
