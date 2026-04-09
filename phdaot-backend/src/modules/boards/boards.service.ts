@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Board } from './entities/board.entity';
+import { BoardColumn } from './entities/board-column.entity';
 import { CreateBoardDto, UpdateBoardDto } from './dto/board.dto';
 
 import { WorkspacesGateway } from '../workspaces/gateways/workspaces.gateway';
@@ -11,6 +12,9 @@ export class BoardsService {
   constructor(
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
+    @InjectRepository(BoardColumn)
+    private readonly columnRepository: Repository<BoardColumn>,
+    @Inject(forwardRef(() => WorkspacesGateway))
     private readonly workspacesGateway: WorkspacesGateway,
   ) {}
 
@@ -36,12 +40,44 @@ export class BoardsService {
   async findOne(id: string): Promise<Board> {
     const board = await this.boardRepository.findOne({ 
       where: { id },
-      relations: ['workspace'] 
+      relations: ['workspace', 'columns', 'columns.tasks'] 
     });
     if (!board) {
       throw new NotFoundException(`Board with ID "${id}" not found`);
     }
     return board;
+  }
+
+  /**
+   * Create a new column in a board.
+   */
+  async createColumn(boardId: string, title: string): Promise<BoardColumn> {
+    const board = await this.findOne(boardId);
+    
+    // Calculate order_position
+    const count = await this.columnRepository.count({ where: { board_id: boardId } });
+    
+    const column = this.columnRepository.create({
+      title,
+      board_id: boardId,
+      order_position: count,
+    });
+    
+    const savedColumn = await this.columnRepository.save(column);
+    
+    return savedColumn;
+  }
+
+  /**
+   * Remove a column from a board.
+   */
+  async removeColumn(boardId: string, columnId: string): Promise<void> {
+    const board = await this.findOne(boardId);
+    const result = await this.columnRepository.delete({ id: columnId, board_id: boardId });
+    
+    if (result.affected !== 0) {
+      // Broadcast via WebSockets handled by Gateway
+    }
   }
 
   async update(id: string, updateBoardDto: UpdateBoardDto): Promise<Board> {

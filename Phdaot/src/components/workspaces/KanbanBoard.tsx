@@ -1,279 +1,196 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
 import { KanbanColumn } from './KanbanColumn';
 import { KanbanHeader } from './KanbanHeader';
-import { KanbanCardProps } from './KanbanCard';
 import { useTranslations } from 'next-intl';
+import { useTaskStore } from '@/api/store/useTaskStore';
+import { taskManager } from '@/api/managers/task.manager';
+import { TaskStatus } from '@/api/types';
 
-type BoardColumnData = {
-  id: string;
-  title: string;
-  highlightBadge?: boolean;
-  cards: Omit<KanbanCardProps, 'index' | 'onUpdateTitle' | 'onDelete'>[];
-};
-
-export function KanbanBoard() {
+export function KanbanBoard({ boardId }: { boardId?: string }) {
   const t = useTranslations('Planner');
+  const { columns, setBoardData, moveTask, moveColumn } = useTaskStore();
 
-  const [boardData, setBoardData] = useState<BoardColumnData[]>([
-    {
-      id: 'col-1',
-      title: t('columns.backlog'),
-      highlightBadge: false,
-      cards: [
-        {
-          id: 'card-1',
-          title: 'User Interviews for Mobile Redesign',
-          tags: [
-            { label: 'Research', colorClass: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' },
-            { label: 'UX', colorClass: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' }
-          ],
-          comments: 2,
-          avatars: [
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBcO95JFrI5yC9TcydkyqvDmH7TvQXnvz1eBzDKnteDlkkWwh6UDhL9LzYGm5GfiGsKRZpixBGfnwUdWb5hlm37Hwr0IzVi34si6HiOYRWmOi4OwKEqUyHozgdJtxLffRfSpNfvSifxC1-0MRpmE5JUU9ABBMoOkTU76CbeSCCXVRzPf5oU7KOd_cnVr2irTgETBQvbEQDJ9Xo2ey8IyqEKX2v-_J_bQMk7ykDcQaarOYW6IwNX_MHAME8cGQU-kKT5pi4-60ce', alt: 'AM' },
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBBQ1SRDviT5eZnQeVeUYovBzZJmh81T4Zldde-IPt35GBq_tPTv_auQDdFJsx5jMC7LCLBsyuD4vVPC2rISHXEe2bcKyleBmCRbDMGETFpZ3WGd-YXpXg-kRUMSVE35-SBy7NXMeWf4ejMMwEcAaMhp7g73OOm2OMzh5lHhG71yJgz4ttgZE2itCugT448zT2JQrNHIsPRrqFEMC-9cuHjOp5h658sdLkU2pL3LI3eqtFyRCLPzqpnxVyNtjtozoE4GN3uhWwi', alt: 'JD' }
-          ]
-        },
-        {
-          id: 'card-2',
-          title: 'API Infrastructure Migration Plan',
-          tags: [
-            { label: 'Priority', colorClass: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' }
-          ],
-          attachments: 1,
-          avatars: [
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJu8Op0lbtrzGeUBZ7KMGYzyWZzSwAAEHY9eW-w1ZFUOQxinR5l_Oi5pPyG1YxJSmT0vBJQmWsbzT9ewhst5pKw8ETlz62bVM67nGzbiJUEu5ceJR1nnACyMcOVELXQGe0ZIReaT55OpxnnOD3o9ICxK7NwWDc7mLKocOD8MuteVofkwmvbuHkh8Eoiy7MMVEp-Fk2Qjp5ibtBCXSXttgMyrM3y0WkHn1OlMaFnKxXZ-EXWU1E3ZKyen0febnMG_K9pCeI2ODX', alt: 'SK' }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'col-2',
-      title: t('columns.inProgress'),
-      highlightBadge: true,
-      cards: [
-        {
-          id: 'card-3',
-          title: 'Implement Dark Mode using Design Tokens',
-          tags: [
-            { label: 'Dev', colorClass: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' }
-          ],
-          tasksCompleted: 4,
-          tasksTotal: 12,
-          highlightColor: 'border-primary',
-          avatars: [
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD8Flu4AERGjhmkm7uhHrIh3p9soLkEstxrUBEqtAdqhA1zY5D2q1H0_JlrK2xwVsPbVdNcib8SrWm1mLlIlLNDm42x6xtiyQvWgLjik_IQDQ9mDxm2gKc2K-aVXcIchtxC_pi1yrwe8kJFlDkmVj8Ge88SOInPMGe-mbrFjWDyxT5WNMBlAqgvQLWRGF2vDR6FhQxtp85e49Kte_Zlcccg6oJnqJThvyorL1oEwE_EG-UUHXmI3X5i_W9EDOF-mTYK4d_CLnXD', alt: 'TR' }
-          ]
-        },
-        {
-          id: 'card-4',
-          title: 'Fluid Grid System Prototypes',
-          tags: [
-            { label: 'Design', colorClass: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' }
-          ],
-          comments: 5,
-          avatars: [
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCCNDGJ7rA_7VPsNHGdMkMj3w6I_VtM6z30geJ4ZFbPd_uPnuvSXiORoJdT7U3bMYuAcxSZ6PUMYeRm_JeCe6xiTea4JS1lzoSQgb5QPt2MNmJZVXBltCg0zumrrjepVs0W_CkUtXs8ryfyL5Z9_Ubxf7S0JTQJTXVJL06k8EWeLylz1wf1fgRd1OYfVA1AD9M8lX7cLSRcfVC-TSWrpM_nZu3maGK2kQcBTzsD4PtK0Nq2Lrg0O3SxlxX2omHVtebbZFJbzkjg', alt: 'LW' }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'col-3',
-      title: t('columns.testing'),
-      highlightBadge: false,
-      cards: [
-        {
-          id: 'card-5',
-          title: 'Fix responsive overflow on tablet viewports',
-          tags: [
-            { label: 'QA', colorClass: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' },
-            { label: 'Bug', colorClass: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' }
-          ],
-          dueDate: 'Tomorrow',
-          dueColorClass: 'text-red-600',
-          avatars: [
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC5QCMCQ1i_Cs9Dgs2IuFhiFjpIUONoBEO-HkZhnWnvPKE09cNSfqEBpf5SLeOSTt9S7AKu0n0pIK-kPeYfwVQDBNvHwO_OcnCROKaHVc2X4Gj6E7DdtoeUnTsZEc-fGlBOwmtAyg-Yg8Oxg9D5YrzETc306c6sZonfSQK1H0iV6yt_RbZ20J0w8dZy5hhUAjI9V4FGL838ufok9ZYg2j2cWY0Y6X0yXULxqlroUwsasCQBeYRIJKAXWFl_4rHz6lyRsG4z1LYm', alt: 'BM' }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'col-4',
-      title: t('columns.done'),
-      highlightBadge: false,
-      cards: [
-        {
-          id: 'card-6',
-          title: 'Q3 Retrospective & Documentation',
-          tags: [
-            { label: 'Release', colorClass: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300' }
-          ],
-          isDone: true,
-          avatars: [
-            { src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIWuyhrWVO_aygwWg0ag_y1UGB0wnE-wj5ZtG8mJU3dGJ5bk8_7ETt8v4zlWZuJD8hGrX379FwaeY1_JiM6muu_oEe23Fp_n9ydkEsqxlKNOEKSrbjiEF0MQCDthp0A1tUsVXKb0fu_Ks8ZiZROD-m6Y9GqY-NH-4UPCsojyCmQdy5cDz6hJnXmzHhl-2BoCkLA3KKxjnMbVR90wTARbuuK9XIn81ZCAENetNDRtGZni2OZ4AVP1R-ep3mxvX6L6ePDbnEfni_', alt: 'JD' }
-          ]
-        }
-      ]
+  // Senior Frontend: Board now initializes empty and reflects real server data.
+  useEffect(() => {
+    // Subscribe to real-time updates for this board
+    if (boardId) {
+      taskManager.subscribeToBoard(boardId);
+      taskManager.fetchBoardColumns(boardId);
     }
-  ]);
+  }, [boardId]);
+
 
   // Drag End handler
   const onDragEnd = useCallback((result: DropResult) => {
-    const { destination, source, type } = result;
+    const { destination, source, draggableId, type } = result;
 
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    // Moving columns
+    // Moving columns - Senior strategy: Handled via store and eventually synced
     if (type === 'column') {
-      const newBoardData = Array.from(boardData);
-      const [removedColumn] = newBoardData.splice(source.index, 1);
-      newBoardData.splice(destination.index, 0, removedColumn);
-      setBoardData(newBoardData);
+      moveColumn(source.index, destination.index);
       return;
     }
 
-    // Moving cards
-    if (type === 'card') {
-      const sourceColIndex = boardData.findIndex(col => col.id === source.droppableId);
-      const destColIndex = boardData.findIndex(col => col.id === destination.droppableId);
-      
-      const sourceCol = boardData[sourceColIndex];
-      const destCol = boardData[destColIndex];
+    // Moving cards - Standardized Real-time integration
+    if (type === 'card' && boardId) {
+      const sourceCol = columns.find(c => c.id === source.droppableId);
+      const destCol = columns.find(c => c.id === destination.droppableId);
 
-      const sourceCards = Array.from(sourceCol.cards);
-      const destCards = sourceCol.id === destCol.id ? sourceCards : Array.from(destCol.cards);
-
-      const [movedCard] = sourceCards.splice(source.index, 1);
-
-      destCards.splice(destination.index, 0, movedCard);
-
-      const newBoardData = [...boardData];
-      newBoardData[sourceColIndex] = { ...sourceCol, cards: sourceCards };
-      newBoardData[destColIndex] = { ...destCol, cards: destCards };
-
-      setBoardData(newBoardData);
+      if (sourceCol && destCol) {
+        taskManager.moveTask(
+          draggableId,
+          sourceCol.status,
+          destCol.status,
+          destination.index
+        );
+      }
     }
-  }, [boardData]);
+  }, [boardId, columns, moveColumn]);
 
-  // CRUD for Lists
-  const addList = () => {
-    const listId = `col-${Date.now()}`;
-    setBoardData([
-      ...boardData,
-      { id: listId, title: t('newList'), highlightBadge: false, cards: [] }
-    ]);
+  // CRU(D) Actions routed through Manager for real-time sync
+  const handleAddNewColumn = async () => {
+    if (!boardId) return;
+    await taskManager.createColumn(boardId, t('newList'));
   };
 
-  const updateListTitle = (listId: string, newTitle: string) => {
-    setBoardData(boardData.map(col => 
-      col.id === listId ? { ...col, title: newTitle } : col
-    ));
+  const handleAddNewTask = (status: TaskStatus) => {
+    if (!boardId) return;
+    taskManager.createTask(boardId, status, t('newTask'));
   };
 
-  const deleteList = (listId: string) => {
-    setBoardData(boardData.filter(col => col.id !== listId));
+  const handleUpdateTaskTitle = (taskId: string, status: TaskStatus, title: string) => {
+    taskManager.updateTaskTitle(taskId, status, title);
   };
 
-  // CRUD for Cards
-  const addCard = (listId: string) => {
-    const cardId = `card-${Date.now()}`;
-    setBoardData(boardData.map(col => {
-      if (col.id === listId) {
-        return {
-          ...col,
-          cards: [...col.cards, { id: cardId, title: t('newTask') }]
-        };
-      }
-      return col;
-    }));
+  const handleDeleteTask = (taskId: string, status: TaskStatus) => {
+    taskManager.deleteTask(taskId, status);
   };
 
-  const updateCardTitle = (listId: string, cardId: string, newTitle: string) => {
-    setBoardData(boardData.map(col => {
-      if (col.id === listId) {
-        return {
-          ...col,
-          cards: col.cards.map((card: any) => 
-            card.id === cardId ? { ...card, title: newTitle } : card
-          )
-        };
-      }
-      return col;
-    }));
+  const handleUpdateColumnTitle = (status: TaskStatus, title: string) => {
+    const { updateColumnTitle } = useTaskStore.getState();
+    updateColumnTitle(status, title);
+    // taskManager.updateColumnTitle(boardId, status, title);
   };
 
-  const deleteCard = (listId: string, cardId: string) => {
-    setBoardData(boardData.map(col => {
-      if (col.id === listId) {
-        return {
-          ...col,
-          cards: col.cards.filter((card: any) => card.id !== cardId)
-        };
-      }
-      return col;
-    }));
+  const handleDeleteColumn = (columnId: string) => {
+    if (!boardId) return;
+    taskManager.deleteColumn(boardId, columnId);
   };
+
+  const totalTasks = columns.reduce((acc, col) => acc + (col.tasks?.length || 0), 0);
 
   return (
     <div className="flex flex-col h-full w-full bg-surface relative overflow-hidden">
-      <KanbanHeader />
-      
+      <KanbanHeader boardId={boardId} />
+
+
       <main className="flex-grow flex flex-col relative overflow-hidden">
         {/* Background Overlay */}
-        <div 
-          className="absolute inset-0 z-0 bg-primary pointer-events-none opacity-[0.03] dark:opacity-[0.05]" 
+        <div
+          className="absolute inset-0 z-0 bg-primary pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0,61,155,0.4) 1px, transparent 0)', backgroundSize: '24px 24px' }}
         />
-        
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="board" type="column" direction="horizontal">
-            {(provided) => (
-              <div 
-                className="flex-grow overflow-x-auto kanban-scroll p-6 relative z-10 w-full h-full"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                <div className="flex items-start gap-6 min-w-max h-full pb-4">
-                  {boardData.map((col, index) => (
-                    <KanbanColumn 
-                      key={col.id}
-                      id={col.id}
-                      index={index}
-                      title={col.title}
-                      count={col.cards.length}
-                      highlightBadge={col.highlightBadge}
-                      cards={col.cards as any}
-                      
-                      // Methods passed for CRUD
-                      onAddCard={() => addCard(col.id)}
-                      onUpdateColTitle={(title) => updateListTitle(col.id, title)}
-                      onDeleteCol={() => deleteList(col.id)}
-                      onUpdateCardTitle={(cardId, title) => updateCardTitle(col.id, cardId, title)}
-                      onDeleteCard={(cardId) => deleteCard(col.id, cardId)}
-                    />
-                  ))}
-                  {provided.placeholder}
-                  
-                  {/* Add Another List Button */}
-                  <div className="w-80 shrink-0">
-                    <button 
-                      onClick={addList}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/40 dark:bg-slate-900/40 hover:bg-white/60 dark:hover:bg-slate-900/60 transition-all border border-dashed border-outline-variant/30 text-secondary font-semibold font-headline text-sm"
-                    >
-                      <span className="material-symbols-outlined">add</span>
-                      {t('addColumn')}
-                    </button>
+
+        {columns.length === 0 ? (
+          <BoardEmptyState onAddFirstList={handleAddNewColumn} />
+        ) : (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="board" type="column" direction="horizontal">
+              {(provided) => (
+                <div
+                  className="flex-grow overflow-x-auto kanban-scroll p-6 relative z-10 w-full h-full"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  <div className="flex items-start gap-6 min-w-max h-full pb-4">
+                    {columns.map((col, index) => (
+                      <KanbanColumn
+                        key={col.id}
+                        id={col.id}
+                        index={index}
+                        title={col.title}
+                        status={col.status}
+                        count={col.tasks?.length || 0}
+                        highlightBadge={col.highlightBadge}
+                        cards={(col.tasks || []) as any}
+
+                        // Methods passed for CRUD managed by taskManager
+                        onAddCard={() => handleAddNewTask(col.status)}
+                        onUpdateColTitle={(title) => handleUpdateColumnTitle(col.status, title)}
+                        onDeleteCol={() => handleDeleteColumn(col.id)}
+                        onUpdateCardTitle={(taskId, title) => handleUpdateTaskTitle(taskId, col.status, title)}
+                        onDeleteCard={(taskId) => handleDeleteTask(taskId, col.status)}
+                      />
+                    ))}
+                    {provided.placeholder}
+
+                    {/* Add Another List Button */}
+                    <div className="w-80 shrink-0">
+                      <button
+                        onClick={handleAddNewColumn}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/40 dark:bg-slate-900/40 hover:bg-white/60 dark:hover:bg-slate-900/60 transition-all border border-dashed border-outline-variant/30 text-secondary font-semibold font-headline text-sm shadow-sm hover:shadow-md"
+                      >
+                        <span className="material-symbols-outlined">add</span>
+                        {t('addColumn')}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+              )}
+            </Droppable>
+          </DragDropContext>
+        )}
       </main>
     </div>
   );
 }
+
+
+/**
+ * Premium Empty State for a new Kanban Board
+ * Refactored to use standard localization keys.
+ */
+function BoardEmptyState({ onAddFirstList }: { onAddFirstList: () => void }) {
+  const t = useTranslations('Planner');
+
+  return (
+    <div className="flex-grow flex items-center justify-center p-6 relative z-10">
+      <div className="max-w-md w-full text-center animate-in fade-in zoom-in duration-700">
+        <div className="relative mb-8 group">
+          <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 animate-pulse" />
+          <div className="relative h-48 w-48 mx-auto bg-surface-container-highest rounded-[2.5rem] shadow-2xl flex items-center justify-center border border-white/20 backdrop-blur-xl rotate-3">
+            <span className="material-symbols-outlined text-7xl text-primary drop-shadow-lg">dashboard_customize</span>
+          </div>
+        </div>
+
+        <h2 className="text-3xl font-black font-headline tracking-tighter text-on-surface mb-3 uppercase italic">
+          {t('emptyState.title')}
+        </h2>
+        <p className="text-secondary font-medium mb-10 leading-relaxed px-4">
+          {t('emptyState.description')}
+        </p>
+
+        <button
+          onClick={onAddFirstList}
+          className="group relative inline-flex items-center gap-3 px-8 py-4 bg-primary text-on-primary font-bold rounded-2xl shadow-xl transition-all hover:-translate-y-1 active:scale-95 overflow-hidden"
+        >
+          <span className="material-symbols-outlined">add_circle</span>
+          <span className="relative z-10">{t('emptyState.button')}</span>
+        </button>
+
+        <div className="mt-12 flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-outline opacity-40">
+          <div className="h-px w-8 bg-current" />
+          <span>{t('emptyState.hint')}</span>
+          <div className="h-px w-8 bg-current" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+

@@ -14,12 +14,18 @@ const workspace_member_entity_1 = require("./entities/workspace-member.entity");
 const workspaces_service_1 = require("./workspaces.service");
 const workspaces_controller_1 = require("./workspaces.controller");
 const workspaces_gateway_1 = require("./gateways/workspaces.gateway");
+const boards_module_1 = require("../boards/boards.module");
+const tasks_module_1 = require("../tasks/tasks.module");
 let WorkspacesModule = class WorkspacesModule {
 };
 exports.WorkspacesModule = WorkspacesModule;
 exports.WorkspacesModule = WorkspacesModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([workspace_entity_1.Workspace, workspace_member_entity_1.WorkspaceMember])],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([workspace_entity_1.Workspace, workspace_member_entity_1.WorkspaceMember]),
+            (0, common_1.forwardRef)(() => boards_module_1.BoardsModule),
+            tasks_module_1.TasksModule,
+        ],
         providers: [workspaces_service_1.WorkspacesService, workspaces_gateway_1.WorkspacesGateway],
         controllers: [workspaces_controller_1.WorkspacesController],
         exports: [workspaces_service_1.WorkspacesService, workspaces_gateway_1.WorkspacesGateway, typeorm_1.TypeOrmModule],

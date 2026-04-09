@@ -261,7 +261,20 @@
       "view": "View",
       "filter": "Filter",
       "share": "Share",
-      "customize": "Customize"
+      "customize": "Customize",
+      "automation": "Automation",
+      "visibility": {
+        "public": "Public",
+        "private": "Private",
+        "workspace": "Workspace"
+      }
+    },
+
+    "emptyState": {
+      "title": "Your Fresh Canvas",
+      "description": "Every great project starts with a single step. Customize your workflow and start organizing tasks beautifully.",
+      "button": "Create First Column",
+      "hint": "Personalize Your Workflow"
     }
   },
   "Team": {

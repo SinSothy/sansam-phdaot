@@ -30,6 +30,36 @@ export const boardManager = {
   },
 
   /**
+   * Fetch a single board by ID and update store.
+   */
+  async fetchBoardDetail(boardId: string) {
+    const { setLoading, updateBoard, boards } = useBoardStore.getState();
+    
+    // Check if board already exists in store and has all needed info
+    const existingBoard = boards.find(b => b.id === boardId);
+    if (existingBoard) return existingBoard;
+
+    setLoading(true);
+    try {
+      const board = await boardService.getBoard(boardId);
+      // updateBoard checks if it exists and updates, but we might need to add it if it's not in the list
+      const { boards: currentBoards, setBoards } = useBoardStore.getState();
+      if (!currentBoards.some(b => b.id === boardId)) {
+        setBoards([...currentBoards, board]);
+      } else {
+        updateBoard(boardId, board);
+      }
+      return board;
+    } catch (error: any) {
+      toast.error("Failed to fetch board details");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  },
+
+
+  /**
    * Create a new board and update store.
    */
   async createBoard(boardData: CreateBoardDto) {

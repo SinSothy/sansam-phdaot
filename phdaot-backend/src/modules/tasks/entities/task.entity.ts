@@ -1,15 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Project } from '../../projects/entities/project.entity';
 import { Board } from '../../boards/entities/board.entity';
+import { BoardColumn } from '../../boards/entities/board-column.entity';
 import { User } from '../../users/entities/user.entity';
-
-export enum TaskStatus {
-  TODO = 'TODO',
-  IN_PROGRESS = 'IN_PROGRESS',
-  TESTING = 'TESTING',
-  DONE = 'DONE',
-  DELETED = 'DELETED',
-}
+import { TaskStatus } from '../enums/task-status.enum';
 
 @Entity('tasks')
 export class Task {
@@ -29,11 +23,14 @@ export class Task {
   @Column({ type: 'int', default: 0 })
   order_position: number;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   project_id: string;
 
   @Column('uuid', { nullable: true })
   board_id: string;
+
+  @Column('uuid', { nullable: true })
+  column_id: string;
 
   @Column('uuid', { nullable: true })
   assignee_id: string;
@@ -45,6 +42,10 @@ export class Task {
   @ManyToOne(() => Board, (board) => board.tasks)
   @JoinColumn({ name: 'board_id' })
   board: Board;
+
+  @ManyToOne(() => BoardColumn, (column) => column.tasks, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'column_id' })
+  column: BoardColumn;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'assignee_id' })

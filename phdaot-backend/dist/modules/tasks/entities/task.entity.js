@@ -9,19 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Task = exports.TaskStatus = void 0;
+exports.Task = void 0;
 const typeorm_1 = require("typeorm");
 const project_entity_1 = require("../../projects/entities/project.entity");
 const board_entity_1 = require("../../boards/entities/board.entity");
+const board_column_entity_1 = require("../../boards/entities/board-column.entity");
 const user_entity_1 = require("../../users/entities/user.entity");
-var TaskStatus;
-(function (TaskStatus) {
-    TaskStatus["TODO"] = "TODO";
-    TaskStatus["IN_PROGRESS"] = "IN_PROGRESS";
-    TaskStatus["TESTING"] = "TESTING";
-    TaskStatus["DONE"] = "DONE";
-    TaskStatus["DELETED"] = "DELETED";
-})(TaskStatus || (exports.TaskStatus = TaskStatus = {}));
+const task_status_enum_1 = require("../enums/task-status.enum");
 let Task = class Task {
 };
 exports.Task = Task;
@@ -36,8 +30,8 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
-        enum: TaskStatus,
-        default: TaskStatus.TODO,
+        enum: task_status_enum_1.TaskStatus,
+        default: task_status_enum_1.TaskStatus.TODO,
     }),
     __metadata("design:type", String)
 ], Task.prototype, "status", void 0);
@@ -46,13 +40,17 @@ __decorate([
     __metadata("design:type", Number)
 ], Task.prototype, "order_position", void 0);
 __decorate([
-    (0, typeorm_1.Column)('uuid'),
+    (0, typeorm_1.Column)('uuid', { nullable: true }),
     __metadata("design:type", String)
 ], Task.prototype, "project_id", void 0);
 __decorate([
     (0, typeorm_1.Column)('uuid', { nullable: true }),
     __metadata("design:type", String)
 ], Task.prototype, "board_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)('uuid', { nullable: true }),
+    __metadata("design:type", String)
+], Task.prototype, "column_id", void 0);
 __decorate([
     (0, typeorm_1.Column)('uuid', { nullable: true }),
     __metadata("design:type", String)
@@ -67,6 +65,11 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'board_id' }),
     __metadata("design:type", board_entity_1.Board)
 ], Task.prototype, "board", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => board_column_entity_1.BoardColumn, (column) => column.tasks, { onDelete: 'SET NULL' }),
+    (0, typeorm_1.JoinColumn)({ name: 'column_id' }),
+    __metadata("design:type", board_column_entity_1.BoardColumn)
+], Task.prototype, "column", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User),
     (0, typeorm_1.JoinColumn)({ name: 'assignee_id' }),

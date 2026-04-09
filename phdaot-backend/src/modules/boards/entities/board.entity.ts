@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Workspace } from '../../workspaces/entities/workspace.entity';
 import { Task } from '../../tasks/entities/task.entity';
+import { BoardColumn } from './board-column.entity';
 
 export enum BoardVisibility {
   WORKSPACE = 'workspace',
@@ -52,6 +53,9 @@ export class Board {
 
   @OneToMany(() => Task, (task) => task.board)
   tasks: Task[];
+
+  @OneToMany(() => BoardColumn, (column) => column.board)
+  columns: BoardColumn[];
 
   @CreateDateColumn()
   created_at: Date;

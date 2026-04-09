@@ -4,34 +4,14 @@ import React, { useState } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import { cn } from "@/lib/utils";
 
-export type KanbanTag = {
-  label: string;
-  colorClass: string;
-};
+import { Task } from '@/api/types';
 
-export type KanbanAvatar = {
-  src: string;
-  alt: string;
-};
-
-export type KanbanCardProps = {
-  id: string;
+export type KanbanCardProps = Task & {
   index: number;
-  title: string;
-  tags?: KanbanTag[];
-  comments?: number;
-  attachments?: number;
-  tasksCompleted?: number;
-  tasksTotal?: number;
-  dueDate?: string;
-  dueColorClass?: string;
-  avatars?: KanbanAvatar[];
-  isDone?: boolean;
-  highlightColor?: string;
-  
   onUpdateTitle?: (title: string) => void;
   onDelete?: () => void;
 };
+
 
 export function KanbanCard({
   id,
